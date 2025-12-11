@@ -58,11 +58,11 @@ public class BurgerView {
         String nouveauNom = scanner.nextLine();
         if (nouveauNom.trim().isEmpty()) nouveauNom = existing.getNom();
 
-        System.out.println("Prix actuel: " + existing.getPrix() + " | Nouveau prix (enter pour garder) : ");
+        System.out.println("Prix actuel: " + existing.getPrix() + " ou Nouveau prix (enter pour garder) : ");
         String prixInput = scanner.nextLine();
         double nouveauPrix = prixInput.trim().isEmpty() ? existing.getPrix() : Double.parseDouble(prixInput);
 
-        System.out.println("État actuel: " + existing.getEtat() + " | Nouvel état (D = DISPONIBLE, I = INDISPONIBLE, enter pour garder) : ");
+        System.out.println("État actuel: " + existing.getEtat() + " ou Nouvel état (D = DISPONIBLE, I = INDISPONIBLE, enter pour garder) : ");
         String etatInput = scanner.nextLine().trim().toUpperCase();
 
         String nouveauEtat = existing.getEtat();

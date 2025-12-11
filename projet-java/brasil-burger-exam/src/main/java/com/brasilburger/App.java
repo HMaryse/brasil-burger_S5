@@ -30,6 +30,7 @@ public class App {
             System.out.println("3. Modifier un burger");
             System.out.println("4. Ajouter un complément");
             System.out.println("5. Lister les compléments");
+            System.out.println("6. Modifier un complément");
             System.out.println("0. Quitter");
             System.out.print("Choix : ");
 
@@ -46,7 +47,6 @@ public class App {
                 case 3: 
                     burgerView.modifyBurger(); 
                 break;
-
                 case 4: 
                     complementView.addComplement(); 
                 break;
@@ -54,7 +54,7 @@ public class App {
                     complementView.listComplements(); 
                 break;
                 case 6:
-                    
+                    complementView.modifyComplement();
                     break;
 
                 case 0:
