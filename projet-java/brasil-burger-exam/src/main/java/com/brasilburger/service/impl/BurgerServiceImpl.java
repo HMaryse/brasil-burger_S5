@@ -5,81 +5,101 @@ import com.brasilburger.repository.BurgerRepository;
 import com.brasilburger.service.BurgerService;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class BurgerServiceImpl implements BurgerService {
 
     private final BurgerRepository burgerRepo;
+    private final Cloudinary cloudinary;
 
-    // Ton Cloud Name Cloudinary
-    private final String CLOUD_NAME = "derru3bz9";
+    // Images 
+    private static final String[] BURGER_IMAGES = {
+        "https://cdn.pixabay.com/photo/2014/10/23/18/05/burger-500054_1280.jpg",
+        "https://cdn.pixabay.com/photo/2016/03/05/19/02/burger-1238246_1280.jpg",
+        "https://cdn.pixabay.com/photo/2016/02/19/11/53/hamburger-1209078_1280.jpg"
+    };
 
-    // Cloudinary instance
-    private final Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
-            "cloud_name", CLOUD_NAME,
-            "api_key", "162132438588965",             
-            "api_secret", "nIor2bZj0Su0Tvfhqz3eFFALVwY" 
-    ));
+    private static final String[] FRIES_IMAGES = {
+        "https://cdn.pixabay.com/photo/2017/03/17/08/56/french-fries-2150900_1280.jpg",
+        "https://cdn.pixabay.com/photo/2017/05/10/18/46/potato-2304661_1280.jpg"
+    };
 
-    public BurgerServiceImpl(BurgerRepository repo) {
+    private static final String[] DRINK_IMAGES = {
+        "https://cdn.pixabay.com/photo/2017/07/28/14/28/cola-2547680_1280.jpg",
+        "https://cdn.pixabay.com/photo/2016/11/22/19/33/drink-1853254_1280.jpg"
+    };
+
+    private static final String[] MENU_IMAGES = {
+        "https://cdn.pixabay.com/photo/2017/01/22/19/20/burger-2000596_1280.jpg",
+        "https://cdn.pixabay.com/photo/2016/03/05/19/02/burger-1238246_1280.jpg"
+    };
+
+    public BurgerServiceImpl(BurgerRepository repo, Cloudinary cloudinary) {
         this.burgerRepo = repo;
+        this.cloudinary = cloudinary;
+    }
+
+    // AJOUT BURGER
+    @Override
+    public Burger addBurger(String nom, double prix) {
+        String imageUrl = generateImageUrl(nom);
+        Burger b = new Burger(nom, prix, imageUrl);
+        return burgerRepo.save(b);
+    }
+
+    // MODIFIER BURGER
+    @Override
+    public Burger updateBurger(int id, String newName, double newPrix, String newEtat) {
+        Optional<Burger> opt = burgerRepo.findById(id);
+        if (!opt.isPresent()) {
+            throw new RuntimeException("Burger introuvable id = " + id);
+        }
+
+        Burger existing = opt.get();
+        boolean nameChanged = !existing.getNom().equalsIgnoreCase(newName);
+        existing.setNom(newName);
+        existing.setPrix(newPrix);
+        existing.setEtat(newEtat);
+
+        // nouvelle image si nom changé
+        if (nameChanged) {
+            existing.setImageUrl(generateImageUrl(newName));
+        }
+
+        return burgerRepo.update(existing);
     }
 
     @Override
-    public Burger addBurger(String nom, double prix) {
+    public Optional<Burger> findById(int id) {
+        return burgerRepo.findById(id);
+    }
 
-        String imageUrl = generateImageUrl(nom);
-
-        Burger b = new Burger(nom, prix, imageUrl);
-
-        return burgerRepo.save(b);
+    @Override
+    public List<Burger> findAll() {
+        return burgerRepo.findAll();
     }
 
     private String generateImageUrl(String nom) {
         try {
             String lower = nom.toLowerCase();
-            String[] images;
+            String imageSelectionne;
 
-            // Catégorisation
             if (lower.contains("frit")) {
-                images = new String[]{
-                    "https://images.unsplash.com/photo-1541592106381-b31e9677c0e5",
-                    "https://images.unsplash.com/photo-1525755662778-989d0524087e",
-                    "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe"
-                };
-            } else if (lower.contains("coca") || lower.contains("fanta") || lower.contains("boisson") || lower.contains("soda")) {
-                images = new String[]{
-                    "https://images.unsplash.com/photo-1604908177529-1f24da66b34a",
-                    "https://images.unsplash.com/photo-1620912189867-4d66144a3a52",
-                    "https://images.unsplash.com/photo-1589927986089-358123789b59"
-                };
+                imageSelectionne = FRIES_IMAGES[(int)(Math.random() * FRIES_IMAGES.length)];
+            } else if (lower.contains("coca") || lower.contains("soda") || lower.contains("fanta") || lower.contains("boisson")) {
+                imageSelectionne = DRINK_IMAGES[(int)(Math.random() * DRINK_IMAGES.length)];
             } else if (lower.contains("menu")) {
-                images = new String[]{
-                    "https://images.unsplash.com/photo-1565299711253-82901df2de47",
-                    "https://images.unsplash.com/photo-1600891964599-f61ba0e24092",
-                    "https://images.unsplash.com/photo-1562967914-608f82629710"
-                };
-            } else { // BURGER
-                images = new String[]{
-                    "https://images.unsplash.com/photo-1550547660-d9450f859349",
-                    "https://images.unsplash.com/photo-1608759264510-0a684b024be3",
-                    "https://images.unsplash.com/photo-1606756790138-82b8da08f346",
-                    "https://images.unsplash.com/photo-1550317138-10000687a72b",
-                    "https://images.unsplash.com/photo-1571091718767-18b5b1457add",
-                    "https://images.unsplash.com/photo-1603079842319-ab7bbcf3f092",
-                    "https://images.unsplash.com/photo-1551782450-17144c3d71b4",
-                    "https://images.unsplash.com/photo-1568901346375-23c9450c58cd",
-                    "https://images.unsplash.com/photo-1606760227091-3f346fefd45b",
-                    "https://images.unsplash.com/photo-1516684669134-de6f27e526b2"
-                };
+                imageSelectionne = MENU_IMAGES[(int)(Math.random() * MENU_IMAGES.length)];
+            } else {
+                imageSelectionne = BURGER_IMAGES[(int)(Math.random() * BURGER_IMAGES.length)];
             }
 
-            // Sélection aléatoire
-            String imageSource = images[(int)(Math.random() * images.length)];
-
-            // Upload vers Cloudinary
-            Map upload = cloudinary.uploader().upload(imageSource, ObjectUtils.asMap(
-                    "folder", "brasilburger/images"
+            Map upload = cloudinary.uploader().upload(imageSelectionne, ObjectUtils.asMap(
+                "folder", "brasilburger/images",
+                "public_id", "burger_" + System.currentTimeMillis()
             ));
 
             return upload.get("secure_url").toString();
@@ -88,6 +108,4 @@ public class BurgerServiceImpl implements BurgerService {
             throw new RuntimeException("Erreur génération image : " + e.getMessage());
         }
     }
-
-
 }

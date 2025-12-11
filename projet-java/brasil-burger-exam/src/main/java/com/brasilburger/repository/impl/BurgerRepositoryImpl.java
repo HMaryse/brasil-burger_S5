@@ -3,29 +3,28 @@ package com.brasilburger.repository.impl;
 import com.brasilburger.entity.Burger;
 import com.brasilburger.repository.BurgerRepository;
 import com.brasilburger.config.database.Database;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class BurgerRepositoryImpl implements BurgerRepository {
 
     @Override
     public Burger save(Burger burger) {
-        String sql = "INSERT INTO burger (nom, prix, image_url) VALUES (?, ?, ?) RETURNING id;";
+        String sql = "INSERT INTO burger (nom, prix, image_url, etat) VALUES (?, ?, ?, 'DISPONIBLE') RETURNING id;";
 
         try (Connection con = Database.getDataSource().getConnection();
              PreparedStatement stmt = con.prepareStatement(sql)) {
 
             stmt.setString(1, burger.getNom());
             stmt.setDouble(2, burger.getPrix());
-            stmt.setString(3, burger.getImageUrl()); // <-- image_url
+            stmt.setString(3, burger.getImageUrl());
 
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 burger.setId(rs.getInt("id"));
             }
-
             return burger;
 
         } catch (Exception e) {
@@ -35,7 +34,7 @@ public class BurgerRepositoryImpl implements BurgerRepository {
 
     @Override
     public Burger update(Burger burger) {
-        String sql = "UPDATE burger SET nom=?, prix=?, image_url=?, etat=? WHERE id=?";
+        String sql = "UPDATE burger SET nom=?, prix=?, image_url=?, etat=?::etat_type WHERE id=?;";
 
         try (Connection con = Database.getDataSource().getConnection();
              PreparedStatement stmt = con.prepareStatement(sql)) {
@@ -68,7 +67,7 @@ public class BurgerRepositoryImpl implements BurgerRepository {
                 b.setId(rs.getInt("id"));
                 b.setNom(rs.getString("nom"));
                 b.setPrix(rs.getDouble("prix"));
-                b.setImageUrl(rs.getString("image_url")); // <-- image_url
+                b.setImageUrl(rs.getString("image_url"));
                 b.setEtat(rs.getString("etat"));
                 list.add(b);
             }
@@ -78,5 +77,32 @@ public class BurgerRepositoryImpl implements BurgerRepository {
         }
 
         return list;
+    }
+
+    @Override
+    public Optional<Burger> findById(int id) {
+        String sql = "SELECT * FROM burger WHERE id = ?;";
+
+        try (Connection con = Database.getDataSource().getConnection();
+             PreparedStatement stmt = con.prepareStatement(sql)) {
+
+            stmt.setInt(1, id);
+
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                Burger b = new Burger();
+                b.setId(rs.getInt("id"));
+                b.setNom(rs.getString("nom"));
+                b.setPrix(rs.getDouble("prix"));
+                b.setImageUrl(rs.getString("image_url"));
+                b.setEtat(rs.getString("etat"));
+                return Optional.of(b);
+            }
+
+            return Optional.empty();
+
+        } catch (Exception e) {
+            throw new RuntimeException("Erreur findById burger : " + e.getMessage());
+        }
     }
 }
