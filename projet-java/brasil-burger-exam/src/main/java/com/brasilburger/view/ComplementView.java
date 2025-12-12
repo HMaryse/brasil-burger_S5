@@ -31,7 +31,7 @@ public class ComplementView {
     public void listComplements() {
         List<Complement> list = service.findAll();
             for (Complement c : list) {
-                System.out.println("-----------------------");
+                System.out.println("\n---Liste des Compléments  ---");
                 System.out.println("ID: " + c.getId());
                 System.out.println("Nom: " + c.getNom());
                 System.out.println("Prix: " + c.getPrix());

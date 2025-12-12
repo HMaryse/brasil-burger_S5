@@ -24,7 +24,7 @@ public class MenuDetailRepositoryImpl implements MenuDetailRepository {
             }
 
         } catch (Exception e) {
-            throw new RuntimeException("Erreur saveMenuBurgers : " + e.getMessage());
+            throw new RuntimeException("Erreur lors de la sauvegarde du menu : " + e.getMessage());
         }
     }
 
@@ -43,7 +43,28 @@ public class MenuDetailRepositoryImpl implements MenuDetailRepository {
             }
 
         } catch (Exception e) {
-            throw new RuntimeException("Erreur saveMenuComplements : " + e.getMessage());
+            throw new RuntimeException("Erreur lors de la sauvegarde des complements du menu : " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void deleteByMenuId(int menuId) {
+
+        String sql1 = "DELETE FROM menu_detail WHERE menu_id = ?";
+        String sql2 = "DELETE FROM menu_complement WHERE menu_id = ?";
+
+        try (Connection con = Database.getDataSource().getConnection()) {
+
+            PreparedStatement ps1 = con.prepareStatement(sql1);
+            ps1.setInt(1, menuId);
+            ps1.executeUpdate();
+
+            PreparedStatement ps2 = con.prepareStatement(sql2);
+            ps2.setInt(1, menuId);
+            ps2.executeUpdate();
+
+        } catch (Exception e) {
+            throw new RuntimeException("Erreur lors de la supression du menu : " + e.getMessage());
         }
     }
 }

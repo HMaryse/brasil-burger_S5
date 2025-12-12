@@ -8,14 +8,12 @@ import com.cloudinary.Cloudinary;
 
 public class ComplementFactory {
 
-    // Crée le repository des compléments
     public static ComplementRepository createRepository() {
         return new ComplementRepositoryImpl();
     }
 
-    // Crée le service des compléments avec Cloudinary injecté
     public static ComplementService createService() {
-        Cloudinary cloudinary = AppFactory.getCloudinary(); // récupère l'instance unique
+        Cloudinary cloudinary = AppFactory.getCloudinary(); 
         return new ComplementServiceImpl(createRepository(), cloudinary);
     }
 }

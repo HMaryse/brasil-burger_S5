@@ -19,12 +19,11 @@ public class MenuServiceImpl implements MenuService {
     private final BurgerService burgerService;
     private final ComplementService complementService;
 
-    // IMAGES MENU 
     private static final String[] MENU_IMAGES = {
-        "https://res.cloudinary.com/derru3bz9/image/upload/v1765483119/hamburger-4008822_1280_lqujr1.jpg",
-        "https://res.cloudinary.com/derru3bz9/image/upload/v1765483083/hamburger-6641821_1280_ghkaky.jpg",
-        "https://res.cloudinary.com/derru3bz9/image/upload/v1765483010/hamburger-7422976_1280_c4xjvb.jpg",
-        "https://res.cloudinary.com/derru3bz9/image/upload/v1765478091/photo-1551782450-17144efb9c50_gfribr.jpg"
+            "https://res.cloudinary.com/derru3bz9/image/upload/v1765483119/hamburger-4008822_1280_lqujr1.jpg",
+            "https://res.cloudinary.com/derru3bz9/image/upload/v1765483083/hamburger-6641821_1280_ghkaky.jpg",
+            "https://res.cloudinary.com/derru3bz9/image/upload/v1765483010/hamburger-7422976_1280_c4xjvb.jpg",
+            "https://res.cloudinary.com/derru3bz9/image/upload/v1765478091/photo-1551782450-17144efb9c50_gfribr.jpg"
     };
 
     public MenuServiceImpl(
@@ -56,13 +55,11 @@ public class MenuServiceImpl implements MenuService {
             totalPrice += c.getPrix();
         }
 
-        
         String imageUrl = generateMenuImage();
 
         Menu menu = new Menu(nom, totalPrice, imageUrl, "DISPONIBLE");
         Menu saved = menuRepo.save(menu);
 
-        
         detailRepo.saveMenuBurgers(saved.getId(), burgerIds);
         detailRepo.saveMenuComplements(saved.getId(), complementIds);
 
@@ -94,8 +91,38 @@ public class MenuServiceImpl implements MenuService {
         return menuRepo.findAll();
     }
 
-    // Génération d'une image du menu
     private String generateMenuImage() {
         return MENU_IMAGES[new Random().nextInt(MENU_IMAGES.length)];
+    }
+
+    @Override
+    public Menu updateMenuComposition(int id, List<Integer> burgerIds, List<Integer> complementIds) {
+
+        Menu menu = menuRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Menu introuvable id=" + id));
+
+        double totalPrice = 0;
+
+        for (int bId : burgerIds) {
+            totalPrice += burgerService.findById(bId)
+                    .orElseThrow(() -> new RuntimeException("Burger introuvable id=" + bId))
+                    .getPrix();
+        }
+
+        for (int cId : complementIds) {
+            totalPrice += complementService.findById(cId)
+                    .orElseThrow(() -> new RuntimeException("Complément introuvable id=" + cId))
+                    .getPrix();
+        }
+
+        menu.setPrix(totalPrice);
+
+        Menu updated = menuRepo.update(menu);
+
+        detailRepo.deleteByMenuId(menu.getId());
+        detailRepo.saveMenuBurgers(menu.getId(), burgerIds);
+        detailRepo.saveMenuComplements(menu.getId(), complementIds);
+
+        return updated;
     }
 }

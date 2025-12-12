@@ -3,7 +3,6 @@ package com.brasilburger.repository.impl;
 import com.brasilburger.config.database.Database;
 import com.brasilburger.entity.Menu;
 import com.brasilburger.repository.MenuRepository;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +15,7 @@ public class MenuRepositoryImpl implements MenuRepository {
         String sql = "INSERT INTO menu (nom, prix, image_url, etat) VALUES (?, ?, ?, ?::etat_type) RETURNING id;";
 
         try (Connection con = Database.getDataSource().getConnection();
-            PreparedStatement stmt = con.prepareStatement(sql)) {
+             PreparedStatement stmt = con.prepareStatement(sql)) {
 
             stmt.setString(1, menu.getNom());
             stmt.setDouble(2, menu.getPrix());
@@ -31,26 +30,28 @@ public class MenuRepositoryImpl implements MenuRepository {
             return menu;
 
         } catch (Exception e) {
-            throw new RuntimeException("Erreur save menu : " + e.getMessage());
+            throw new RuntimeException("Erreur lors de l'enregistrement du menu : " + e.getMessage());
         }
     }
 
     @Override
     public Menu update(Menu menu) {
-        String sql = "UPDATE menu SET nom = ?, etat = ?::etat_type WHERE id = ?";
+
+        String sql = "UPDATE menu SET nom = ?, etat = ?::etat_type, prix = ? WHERE id = ?";
 
         try (Connection con = Database.getDataSource().getConnection();
              PreparedStatement stmt = con.prepareStatement(sql)) {
 
             stmt.setString(1, menu.getNom());
             stmt.setString(2, menu.getEtat());
-            stmt.setInt(3, menu.getId());
+            stmt.setDouble(3, menu.getPrix());
+            stmt.setInt(4, menu.getId());
 
             stmt.executeUpdate();
             return menu;
 
         } catch (Exception e) {
-            throw new RuntimeException("Erreur update menu : " + e.getMessage());
+            throw new RuntimeException("Erreur lors de la modification du menu : " + e.getMessage());
         }
     }
 
@@ -74,7 +75,7 @@ public class MenuRepositoryImpl implements MenuRepository {
             }
 
         } catch (Exception e) {
-            throw new RuntimeException("Erreur findAll menu : " + e.getMessage());
+            throw new RuntimeException("Erreur lors de la recherche des menus : " + e.getMessage());
         }
 
         return list;
@@ -103,7 +104,7 @@ public class MenuRepositoryImpl implements MenuRepository {
             return Optional.empty();
 
         } catch (Exception e) {
-            throw new RuntimeException("Erreur findById menu : " + e.getMessage());
+            throw new RuntimeException("Erreur lors de la recherche du menu : " + e.getMessage());
         }
     }
 }

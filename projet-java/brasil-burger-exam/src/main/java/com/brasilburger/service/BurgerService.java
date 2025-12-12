@@ -2,7 +2,6 @@ package com.brasilburger.service;
 
 import java.util.List;
 import java.util.Optional;
-
 import com.brasilburger.entity.Burger;
 
 public interface BurgerService {

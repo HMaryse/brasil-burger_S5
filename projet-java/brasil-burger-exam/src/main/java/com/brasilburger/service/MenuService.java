@@ -10,6 +10,8 @@ public interface MenuService {
     List<Menu> findAll();
     Optional<Menu> findById(int id);
     Menu updateMenu(int id, String newName, String newEtat);
+    Menu updateMenuComposition(int id, List<Integer> burgerIds, List<Integer> complementIds);
+
 }
 
 
