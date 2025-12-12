@@ -2,12 +2,13 @@ package com.brasilburger;
 
 import com.brasilburger.config.factory.BurgerFactory;
 import com.brasilburger.config.factory.ComplementFactory;
-
+import com.brasilburger.config.factory.MenuFactory;
 import com.brasilburger.service.BurgerService;
 import com.brasilburger.service.ComplementService;
-
+import com.brasilburger.service.MenuService;
 import com.brasilburger.view.BurgerView;
 import com.brasilburger.view.ComplementView;
+import com.brasilburger.view.MenuView;
 
 import java.util.Scanner;
 
@@ -15,11 +16,16 @@ public class App {
 
     public static void main(String[] args) {
 
+        
         BurgerService burgerService = BurgerFactory.createService();
-        BurgerView burgerView = new BurgerView(burgerService);
         ComplementService complementService = ComplementFactory.createService();
-        ComplementView complementView = new ComplementView(complementService);
+        MenuService menuService = MenuFactory.createService();
 
+        
+        BurgerView burgerView = new BurgerView(burgerService);
+        ComplementView complementView = new ComplementView(complementService);
+        MenuView menuView = new MenuView(menuService, burgerService, complementService); 
+        
         Scanner sc = new Scanner(System.in);
 
         while (true) {
@@ -31,6 +37,7 @@ public class App {
             System.out.println("4. Ajouter un complément");
             System.out.println("5. Lister les compléments");
             System.out.println("6. Modifier un complément");
+            System.out.println("7. Ajouter un menu");
             System.out.println("0. Quitter");
             System.out.print("Choix : ");
 
@@ -38,24 +45,16 @@ public class App {
 
             switch (choix) {
 
-                case 1: 
-                    burgerView.addBurger();
-                break;
-                case 2: 
-                    burgerView.listBurgers();
-                 break;
-                case 3: 
-                    burgerView.modifyBurger(); 
-                break;
-                case 4: 
-                    complementView.addComplement(); 
-                break;
-                case 5: 
-                    complementView.listComplements(); 
-                break;
-                case 6:
-                    complementView.modifyComplement();
-                    break;
+                // BURGERS
+                case 1: burgerView.addBurger(); break;
+                case 2: burgerView.listBurgers(); break;
+                case 3: burgerView.modifyBurger(); break;
+                // COMPLEMENTS
+                case 4: complementView.addComplement(); break;
+                case 5: complementView.listComplements(); break;
+                case 6: complementView.modifyComplement(); break;
+                // MENUS
+                case 7: menuView.addMenu(); break;
 
                 case 0:
                     System.out.println("Au revoir !");
