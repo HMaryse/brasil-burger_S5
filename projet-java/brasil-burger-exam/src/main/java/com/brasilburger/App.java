@@ -38,6 +38,8 @@ public class App {
             System.out.println("5. Lister les compléments");
             System.out.println("6. Modifier un complément");
             System.out.println("7. Ajouter un menu");
+            System.out.println("8. Lister les menus");
+            System.out.println("9. Modifier un menu");
             System.out.println("0. Quitter");
             System.out.print("Choix : ");
 
@@ -55,6 +57,8 @@ public class App {
                 case 6: complementView.modifyComplement(); break;
                 // MENUS
                 case 7: menuView.addMenu(); break;
+                case 8: menuView.listMenus(); break;
+                case 9: menuView.modifyMenu(); break;
 
                 case 0:
                     System.out.println("Au revoir !");

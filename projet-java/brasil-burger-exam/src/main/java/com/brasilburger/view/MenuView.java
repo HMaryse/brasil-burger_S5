@@ -9,6 +9,7 @@ import com.brasilburger.service.MenuService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 
 public class MenuView {
@@ -91,4 +92,31 @@ public class MenuView {
         }
         return list;
     }
+    public void modifyMenu() {
+        System.out.println("ID du menu à modifier : ");
+        int id = Integer.parseInt(scanner.nextLine());
+
+        Optional<Menu> opt = menuService.findById(id);
+
+        if (!opt.isPresent()) {
+            System.out.println("Menu introuvable !");
+            return;
+        }
+
+        Menu m = opt.get();
+
+        System.out.println("Nom actuel : " + m.getNom() + " | Nouveau nom (enter pour garder)");
+        String newName = scanner.nextLine();
+        if (newName.trim().isEmpty()) newName = m.getNom();
+
+        System.out.println("État actuel : " + m.getEtat() + " | Nouveau état (DISPONIBLE / INDISPONIBLE)");
+        String newEtat = scanner.nextLine();
+        if (newEtat.trim().isEmpty()) newEtat = m.getEtat();
+
+        Menu updated = menuService.updateMenu(id, newName, newEtat);
+
+        System.out.println("Menu modifié avec succès !");
+        System.out.println("Nouvelle image : " + updated.getImageUrl());
+    }
+
 }
