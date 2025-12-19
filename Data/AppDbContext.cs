@@ -12,6 +12,7 @@ namespace Data
         public DbSet<Menu> Menus { get; set; }
         public DbSet<Complement> Complements { get; set; }
         public DbSet<Commande> Commandes { get; set; }
+        public DbSet<Client> Clients { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -57,16 +58,15 @@ namespace Data
             });
 
             //  CLIENT (USER)
-            modelBuilder.Entity<User>(entity =>
+            modelBuilder.Entity<Client>(entity =>
             {
                 entity.ToTable("client");
                 entity.HasKey(e => e.Id);
 
                 entity.Property(e => e.Id).HasColumnName("id");
                 entity.Property(e => e.NomComplet).HasColumnName("nom_complet");
-                entity.Property(e => e.Email).HasColumnName("email");
                 entity.Property(e => e.MotDePasse).HasColumnName("mot_de_passe");
-                entity.Property(e => e.Role).HasColumnName("role");
+                entity.Property(e => e.Telephone).HasColumnName("telephone");
             });
 
             // COMMANDE 
@@ -80,7 +80,7 @@ namespace Data
                 entity.Property(e => e.Total).HasColumnName("total");
                 entity.Property(e => e.Statut).HasColumnName("statut");
                 entity.Property(e => e.TypeCommande).HasColumnName("type_commande");
-                entity.Property(e => e.UserId).HasColumnName("client_id");
+                entity.Property(e => e.ClientId).HasColumnName("client_id");
             });
 
             // COMMANDE ITEMS
@@ -120,6 +120,8 @@ namespace Data
                 entity.Property(e => e.ComplementId).HasColumnName("complement_id");
                 entity.Property(e => e.Quantite).HasColumnName("quantite");
             });
+            modelBuilder.Entity<Client>()
+            .ToTable("client"); 
         }
 }
 }

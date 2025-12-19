@@ -1,3 +1,4 @@
+@using Models
 @model ViewModels.CatalogueViewModel
 
 <!DOCTYPE html>
@@ -17,30 +18,26 @@
             font-family: 'Segoe UI', sans-serif;
         }
 
-        /*  BANDE*/
+        /*  FULL WIDTH  */
         .hero-wrapper {
             width: 100vw;
             margin-left: calc(-50vw + 50%);
             margin-right: calc(-50vw + 50%);
+            pointer-events: none; 
         }
 
         .hero {
             background: linear-gradient(90deg, #FFA629 0%, #8B1329 100%);
             color: white;
             padding: 70px 20px;
-            border-radius: 0;
-            margin-bottom: 25px;
-            width: 100vw;
-            margin-left: calc(-50vw + 50%);
-            
+            pointer-events: auto;
         }
 
         .hero-icon {
             font-size: 45px;
-            opacity: 0.9;
         }
 
-        /*  SEARCH  */
+        /* RECHERCHE */
         .search-bar {
             background: white;
             padding: 10px;
@@ -48,7 +45,7 @@
             box-shadow: 0 3px 10px rgba(0,0,0,0.08);
         }
 
-        /*  FILTERS  */
+        /*FILTRE */
         .filter-btn {
             border-radius: 50px;
             font-weight: 600;
@@ -57,16 +54,17 @@
 
         .filter-btn.active {
             background: #FFA629;
-           
+            color: white;
         }
 
-        /*  CARDS  */
+        /*  CARDS */
         .product-card {
             border: none;
             border-radius: 15px;
             overflow: hidden;
             box-shadow: 0 3px 12px rgba(0,0,0,0.1);
             transition: 0.3s;
+            position: relative;
         }
 
         .product-card:hover {
@@ -74,17 +72,17 @@
         }
 
         .badge-tag {
-            background: #e89b1e;
+            background: #FFA629;
             color: white;
             border-radius: 50px;
             padding: 5px 12px;
             font-size: 0.75rem;
         }
 
-        /*  BUTTON COMMANDER  */
+        /* BUTTON COMMANDER  */
         .btn-order {
             background: linear-gradient(90deg, #FFA629 0%, #8B1329 100%);
-            color: #FFFFFF;
+            color: white;
             border-radius: 50px;
             font-weight: 600;
             padding: 8px 18px;
@@ -93,7 +91,7 @@
 
         .btn-order:hover {
             background: #e89b1e;
-            color: #FFFFFF;
+            color: white;
         }
 
         .price {
@@ -122,7 +120,7 @@
 
 <div class="container py-3">
 
-    <!-- TOP -->
+    <!-- HAUT-->
     <div class="d-flex justify-content-between align-items-center mb-3">
         <div class="fw-bold fs-5">
             <i class="bi bi-shop text-danger"></i> Brasil Burger
@@ -131,10 +129,9 @@
             <i class="bi bi-person-badge"></i> Mode Gestionnaire
         </button>
     </div>
-
 </div>
 
-<!-- HERO FULL WIDTH -->
+<!-- BANDE -->
 <div class="hero-wrapper">
     <div class="hero text-center">
         <i class="bi bi-cube hero-icon"></i>
@@ -160,8 +157,8 @@
 
 <div class="container">
 
-    <!-- RECHERCHE ET FILTRE -->
-    <div class="row mb-4">
+    <!--Recherche et filtre -->
+    <div class="row mb-4 mt-4">
         <div class="col-md-7">
             <div class="search-bar d-flex align-items-center">
                 <i class="bi bi-search ms-2 text-muted"></i>
@@ -171,13 +168,13 @@
         </div>
 
         <div class="col-md-5 d-flex justify-content-center gap-2 mt-3 mt-md-0">
-            <a href="?type=ALL" class="btn filter-btn @(Model.Type=="ALL"?"active":"")">Tous</a>
-            <a href="?type=BURGER" class="btn filter-btn @(Model.Type=="BURGER"?"active":"")">Burgers</a>
-            <a href="?type=MENU" class="btn filter-btn @(Model.Type=="MENU"?"active":"")">Menus</a>
+            <a href="?type=ALL&page=1" class="btn filter-btn @(Model.Type=="ALL"?"active":"")">Tous</a>
+            <a href="?type=BURGER&page=1" class="btn filter-btn @(Model.Type=="BURGER"?"active":"")">Burgers</a>
+            <a href="?type=MENU&page=1" class="btn filter-btn @(Model.Type=="MENU"?"active":"")">Menus</a>
         </div>
     </div>
 
-    <!-- PRODUITS -->
+    <!--  PRODUITS  -->
     <div class="row g-4">
 
         @foreach (var b in Model.Burgers)
@@ -185,12 +182,14 @@
             <div class="col-md-4">
                 <div class="card product-card">
                     <span class="badge-tag position-absolute m-2">Burger</span>
-                    <img src="@b.ImageUrl" class="card-img-top" height="220" style="object-fit: cover;">
+                    <img src="@b.ImageUrl" class="card-img-top" height="220" style="object-fit:cover;">
                     <div class="card-body">
                         <h6 class="fw-bold">@b.Nom</h6>
                         <div class="d-flex justify-content-between align-items-center mt-3">
                             <span class="price">@b.Prix FCFA</span>
-                            <button class="btn btn-order">Commander</button>
+                                <a href="/Commande/Ajouter?type=BURGER&id=@b.Id" class="btn btn-order">
+                                    Commander
+                                </a>
                         </div>
                     </div>
                 </div>
@@ -202,12 +201,16 @@
             <div class="col-md-4">
                 <div class="card product-card">
                     <span class="badge-tag position-absolute m-2">Menu</span>
-                    <img src="@m.ImageUrl" class="card-img-top" height="220" style="object-fit: cover;">
+                    <img src="@m.ImageUrl" class="card-img-top" height="220" style="object-fit:cover;">
                     <div class="card-body">
                         <h6 class="fw-bold">@m.Nom</h6>
                         <div class="d-flex justify-content-between align-items-center mt-3">
                             <span class="price">@m.Prix FCFA</span>
-                            <button class="btn btn-order">Commander</button>
+                            <a href="/Commande/Ajouter?type=MENU&id=@m.Id" class="btn btn-order">
+                                Commander
+                            </a>
+
+
                         </div>
                     </div>
                 </div>
@@ -216,7 +219,7 @@
 
     </div>
 
-    <!-- PAGINATION -->
+    <!--  PAGINATION  -->
     @if (Model.TotalPages > 1)
     {
         <div class="d-flex justify-content-center mt-5">
