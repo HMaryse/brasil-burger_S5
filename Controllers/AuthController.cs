@@ -11,20 +11,31 @@ public class AuthController : Controller
         _service = service;
     }
 
-    public IActionResult Login() => View();
+    public IActionResult Login(string? returnUrl)
+    {
+        ViewBag.ReturnUrl = returnUrl;
+        return View();
+    }
 
     [HttpPost]
-    public IActionResult Login(string telephone, string motDePasse)
+    public IActionResult Login(string telephone, string motDePasse, string? returnUrl)
     {
         var client = _service.Login(telephone, motDePasse);
 
         if (client == null)
         {
             ViewBag.Error = "Identifiants incorrects";
+            ViewBag.ReturnUrl = returnUrl;
             return View();
         }
 
         HttpContext.Session.SetInt32("ClientId", client.Id);
+        HttpContext.Session.SetString("ClientNom", client.NomComplet);
+        HttpContext.Session.SetString("ClientAdresse", client.Adresse);
+
+        if (!string.IsNullOrEmpty(returnUrl))
+            return Redirect(returnUrl);
+
         return RedirectToAction("Index", "Dashboard");
     }
 

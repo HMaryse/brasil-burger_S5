@@ -9,7 +9,7 @@ namespace Models
         public double Prix { get; set; }
         public required string ImageUrl { get; set; }
 
-        public string Etat { get; set; } = "DISPONIBLE";
+        public EtatType Etat { get; set; } 
     }
 }
     

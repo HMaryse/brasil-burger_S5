@@ -17,7 +17,7 @@ namespace Services
         public List<Complement> GetAll()
         {
             return _context.Complements
-                .Where(c => c.Etat == "DISPONIBLE")
+                .Where(c => c.Etat == EtatType.DISPONIBLE)
                 .ToList();
         }
 

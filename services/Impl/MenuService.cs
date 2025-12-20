@@ -16,7 +16,7 @@ namespace Services
         public List<Menu>  GetAllDisponibles()
         {
             return _context.Menus
-                .Where(m => m.Etat == "DISPONIBLE")
+                .Where(m => m.Etat == EtatType.DISPONIBLE)
                 .ToList();
         }
 

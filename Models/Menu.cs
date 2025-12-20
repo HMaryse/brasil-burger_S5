@@ -10,8 +10,8 @@ namespace Models
         public required string Nom { get; set; }
         public double Prix { get; set; }
         public required string ImageUrl { get; set; }
-        public string Etat { get; set; } = "DISPONIBLE";
-        
+        public EtatType Etat { get; set; }
+
         public List<MenuDetail> MenuDetails { get; set; } = new List<MenuDetail>();
         public List<MenuComplement> MenuComplements { get; set; } = new List<MenuComplement>();
     }

@@ -11,117 +11,105 @@ namespace Data
         public DbSet<Burger> Burgers { get; set; }
         public DbSet<Menu> Menus { get; set; }
         public DbSet<Complement> Complements { get; set; }
-        public DbSet<Commande> Commandes { get; set; }
         public DbSet<Client> Clients { get; set; }
+        public DbSet<Commande> Commandes { get; set; }
+        public DbSet<CommandeItem> CommandeItems { get; set; }
+        public DbSet<Paiement> Paiements { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            // BURGER
+            // BURGER 
             modelBuilder.Entity<Burger>(entity =>
             {
                 entity.ToTable("burger");
                 entity.HasKey(e => e.Id);
-
                 entity.Property(e => e.Id).HasColumnName("id");
                 entity.Property(e => e.Nom).HasColumnName("nom");
                 entity.Property(e => e.Prix).HasColumnName("prix");
                 entity.Property(e => e.ImageUrl).HasColumnName("image_url");
-                entity.Property(e => e.Etat).HasColumnName("etat");
+                entity.Property(e => e.Etat).HasColumnName("etat"); 
             });
 
-            //MENU
+            // MENU 
             modelBuilder.Entity<Menu>(entity =>
             {
                 entity.ToTable("menu");
                 entity.HasKey(e => e.Id);
-
                 entity.Property(e => e.Id).HasColumnName("id");
                 entity.Property(e => e.Nom).HasColumnName("nom");
                 entity.Property(e => e.Prix).HasColumnName("prix");
                 entity.Property(e => e.ImageUrl).HasColumnName("image_url");
-                entity.Property(e => e.Etat).HasColumnName("etat");
+                entity.Property(e => e.Etat).HasColumnName("etat"); 
             });
 
-            //  COMPLEMENT 
+            // COMPLEMENT 
             modelBuilder.Entity<Complement>(entity =>
             {
                 entity.ToTable("complement");
                 entity.HasKey(e => e.Id);
-
                 entity.Property(e => e.Id).HasColumnName("id");
                 entity.Property(e => e.Nom).HasColumnName("nom");
                 entity.Property(e => e.Prix).HasColumnName("prix");
                 entity.Property(e => e.ImageUrl).HasColumnName("image_url");
-                entity.Property(e => e.Etat).HasColumnName("etat");
+                entity.Property(e => e.Etat).HasColumnName("etat"); 
             });
 
-            //  CLIENT (USER)
+            //  CLIENT 
             modelBuilder.Entity<Client>(entity =>
             {
                 entity.ToTable("client");
                 entity.HasKey(e => e.Id);
-
                 entity.Property(e => e.Id).HasColumnName("id");
                 entity.Property(e => e.NomComplet).HasColumnName("nom_complet");
-                entity.Property(e => e.MotDePasse).HasColumnName("mot_de_passe");
                 entity.Property(e => e.Telephone).HasColumnName("telephone");
+                entity.Property(e => e.MotDePasse).HasColumnName("mot_de_passe");
+                entity.Property(e => e.Adresse).HasColumnName("adresse");
             });
 
-            // COMMANDE 
+            //  COMMANDE 
             modelBuilder.Entity<Commande>(entity =>
             {
                 entity.ToTable("commande");
                 entity.HasKey(e => e.Id);
 
                 entity.Property(e => e.Id).HasColumnName("id");
-                entity.Property(e => e.DateCommande).HasColumnName("date_commande");
-                entity.Property(e => e.Total).HasColumnName("total");
-                entity.Property(e => e.Statut).HasColumnName("statut");
-                entity.Property(e => e.TypeCommande).HasColumnName("type_commande");
                 entity.Property(e => e.ClientId).HasColumnName("client_id");
+                entity.Property(e => e.LivreurId).HasColumnName("livreur_id");
+                entity.Property(e => e.DateCommande).HasColumnName("date_commande");
+                entity.Property(e => e.Statut).HasColumnName("statut"); 
+                entity.Property(e => e.ModeConsommation).HasColumnName("mode_consommation");
+                entity.Property(e => e.Adresse).HasColumnName("adresse");
+                entity.Property(e => e.EstPaye).HasColumnName("est_paye");
+                entity.Property(e => e.ZoneId).HasColumnName("zone_id");
             });
 
-            // COMMANDE ITEMS
+            //  COMMANDE ITEM 
             modelBuilder.Entity<CommandeItem>(entity =>
             {
-                entity.ToTable("commande_items");
+                entity.ToTable("commande_item");
                 entity.HasKey(e => e.Id);
-
                 entity.Property(e => e.Id).HasColumnName("id");
                 entity.Property(e => e.CommandeId).HasColumnName("commande_id");
                 entity.Property(e => e.BurgerId).HasColumnName("burger_id");
                 entity.Property(e => e.MenuId).HasColumnName("menu_id");
                 entity.Property(e => e.Quantite).HasColumnName("quantite");
-                entity.Property(e => e.PrixUnitaire).HasColumnName("prix_unitaire");
+                entity.Property(e => e.PrixTotal).HasColumnName("prix_total");
             });
 
-            // MENU DETAIL 
-            modelBuilder.Entity<MenuDetail>(entity =>
+            // PAIEMENT
+            modelBuilder.Entity<Paiement>(entity =>
             {
-                entity.ToTable("menu_detail");
+                entity.ToTable("paiement");
                 entity.HasKey(e => e.Id);
-
                 entity.Property(e => e.Id).HasColumnName("id");
-                entity.Property(e => e.MenuId).HasColumnName("menu_id");
-                entity.Property(e => e.BurgerId).HasColumnName("burger_id");
-                entity.Property(e => e.Quantite).HasColumnName("quantite");
+                entity.Property(e => e.CommandeId).HasColumnName("commande_id");
+                entity.Property(e => e.Montant).HasColumnName("montant");
+                entity.Property(e => e.DatePaiement).HasColumnName("date_paiement");
+                entity.Property(e => e.ModePaiement).HasColumnName("mode_paiement"); 
+                entity.Property(e => e.StatutPaiement).HasColumnName("statut_paiement"); 
             });
-
-            // MENU COMPLEMENT
-            modelBuilder.Entity<MenuComplement>(entity =>
-            {
-                entity.ToTable("menu_complement");
-                entity.HasKey(e => e.Id);
-
-                entity.Property(e => e.Id).HasColumnName("id");
-                entity.Property(e => e.MenuId).HasColumnName("menu_id");
-                entity.Property(e => e.ComplementId).HasColumnName("complement_id");
-                entity.Property(e => e.Quantite).HasColumnName("quantite");
-            });
-            modelBuilder.Entity<Client>()
-            .ToTable("client"); 
         }
-}
+    }
 }

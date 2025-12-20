@@ -1,7 +1,6 @@
 using Data;
 using Models;
 
-
 namespace Services
 {
     public class BurgerService : IBurgerService
@@ -16,7 +15,7 @@ namespace Services
         public List<Burger> GetAllDisponibles()
         {
             return _context.Burgers
-                .Where(b => b.Etat == "DISPONIBLE")
+                .Where(b => b.Etat == EtatType.DISPONIBLE)
                 .ToList();
         }
 
