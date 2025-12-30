@@ -4,15 +4,15 @@ DirectoryIndex index.php
 <IfModule mod_rewrite.c>
     RewriteEngine On
     
-    # Servir directement les fichiers qui existent (CSS, JS, images, etc.)
+    # Servir directement les fichiers qui existent
     RewriteCond %{REQUEST_FILENAME} -f
     RewriteRule ^ - [L]
     
-    # Tout le reste vers index.php
+    # Rediriger tout le reste vers index.php
     RewriteRule ^ index.php [L]
 </IfModule>
 
-# IMPORTANT : Cette règle permet d'accéder aux CSS
+# Permettre l'accès aux fichiers CSS
 <FilesMatch "\.(css|js|jpg|jpeg|png|gif|ico|svg|woff|woff2|ttf|eot)$">
-    Header set Cache-Control "public, max-age=31536000"
+    Require all granted
 </FilesMatch>
