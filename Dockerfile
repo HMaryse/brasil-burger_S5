@@ -18,7 +18,8 @@ WORKDIR /var/www/html
 COPY . .
 
 # Installer dépendances Symfony
-RUN composer install --no-dev --optimize-autoloader
+RUN composer install --no-dev --no-scripts --optimize-autoloader
+RUN composer dump-autoload --classmap-authoritative
 
 # Apache → dossier public/
 RUN sed -i 's!/var/www/html!/var/www/html/public!g' /etc/apache2/sites-available/000-default.conf
