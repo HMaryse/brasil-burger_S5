@@ -6,7 +6,3 @@ controllers:
     type: attribute
 
 
-security_routes:
-    resource: '@SecurityBundle/Resources/config/routing'
-    prefix: /
-    type: annotation
