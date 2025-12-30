@@ -21,58 +21,49 @@ COPY . .
 # Créer les dossiers manquants
 RUN mkdir -p var/cache var/log
 
-# SUPPRIMER et RECRÉER bundles.php
-RUN rm -f config/bundles.php && \
-    echo '<?php' > config/bundles.php && \
-    echo 'return [' >> config/bundles.php && \
-    echo '    Symfony\Bundle\FrameworkBundle\FrameworkBundle::class => ["all" => true],' >> config/bundles.php && \
-    echo '    Symfony\Bundle\SecurityBundle\SecurityBundle::class => ["all" => true],' >> config/bundles.php && \
-    echo '    Symfony\Bundle\TwigBundle\TwigBundle::class => ["all" => true],' >> config/bundles.php && \
-    echo '    Doctrine\Bundle\DoctrineBundle\DoctrineBundle::class => ["all" => true],' >> config/bundles.php && \
-    echo '];' >> config/bundles.php
+# CRÉER UN NOUVEAU FICHIER bundles.php PROPRE
+RUN cat > config/bundles.php << 'EOF'
+<?php
 
-# Installer dépendances
-RUN composer install --no-dev --no-scripts --optimize-autoloader
+return [
+    Symfony\Bundle\FrameworkBundle\FrameworkBundle::class => ['all' => true],
+    Symfony\Bundle\SecurityBundle\SecurityBundle::class => ['all' => true],
+    Symfony\Bundle\TwigBundle\TwigBundle::class => ['all' => true],
+    Doctrine\Bundle\DoctrineBundle\DoctrineBundle::class => ['all' => true],
+];
+EOF
+
+# Installer dépendances (mode production)
+RUN composer install --no-dev --optimize-autoloader --no-scripts
+
+# Nettoyer le cache
+RUN rm -rf var/cache/*
 
 # Dump autoload
-RUN composer dump-autoload --optimize
+RUN composer dump-autoload --optimize --classmap-authoritative
 
-# VÉRIFICATION du CSS
-RUN echo "=== Vérification CSS ===" && \
-    if [ -f "public/assets/css/dashboard.css" ]; then \
-        echo "✓ CSS trouvé: public/assets/css/dashboard.css"; \
-    elif [ -f "public/asset/css/dashboard.css" ]; then \
-        echo "✓ CSS trouvé: public/asset/css/dashboard.css"; \
-    else \
-        echo "✗ CSS NON TROUVÉ"; \
-        echo "Liste des fichiers CSS:"; \
-        find public/ -name "*.css" 2>/dev/null; \
-    fi
+# Créer un .env.local pour la production
+RUN echo "APP_ENV=prod" > .env.local && \
+    echo "APP_SECRET=production_secret_$(openssl rand -base64 12)" >> .env.local
 
-# Créer un fichier .htaccess dans public/ s'il n'existe pas
-RUN if [ ! -f "public/.htaccess" ]; then \
-        echo 'DirectoryIndex index.php' > public/.htaccess && \
-        echo '' >> public/.htaccess && \
-        echo '<IfModule mod_rewrite.c>' >> public/.htaccess && \
-        echo '    RewriteEngine On' >> public/.htaccess && \
-        echo '    RewriteCond %{REQUEST_FILENAME} -f' >> public/.htaccess && \
-        echo '    RewriteRule ^ - [L]' >> public/.htaccess && \
-        echo '    RewriteRule ^ index.php [L]' >> public/.htaccess && \
-        echo '</IfModule>' >> public/.htaccess; \
-    fi
+# VÉRIFIER le CSS
+RUN echo "=== CSS Check ===" && \
+    ls -la public/ && \
+    find public/ -name "*.css" 2>/dev/null | head -5
 
-# Permissions POUR LE CSS
+# Permissions
 RUN chown -R www-data:www-data /var/www/html && \
-    chmod -R 755 /var/www/html/public && \
-    find public/ -name "*.css" -exec chmod 644 {} \; 2>/dev/null || true
+    chmod -R 755 /var/www/html/public
 
-# Config Apache POUR SERVIR LE CSS
-RUN sed -i 's!/var/www/html!/var/www/html/public!g' /etc/apache2/sites-available/000-default.conf && \
-    echo '<Directory /var/www/html/public>' >> /etc/apache2/apache2.conf && \
-    echo '    Options Indexes FollowSymLinks' >> /etc/apache2/apache2.conf && \
-    echo '    AllowOverride All' >> /etc/apache2/apache2.conf && \
-    echo '    Require all granted' >> /etc/apache2/apache2.conf && \
-    echo '</Directory>' >> /etc/apache2/apache2.conf
-
+# Config Apache TRÈS SIMPLE
+RUN echo '<VirtualHost *:80>' > /etc/apache2/sites-available/000-default.conf && \
+    echo '    DocumentRoot /var/www/html/public' >> /etc/apache2/sites-available/000-default.conf && \
+    echo '    <Directory /var/www/html/public>' >> /etc/apache2/sites-available/000-default.conf && \
+    echo '        AllowOverride All' >> /etc/apache2/sites-available/000-default.conf && \
+    echo '        Require all granted' >> /etc/apache2/sites-available/000-default.conf && \
+    echo '    </Directory>' >> /etc/apache2/sites-available/000-default.conf && \
+    echo '</VirtualHost>' >> /etc/apache2/sites-available/000-default.conf
+# Activer l'affichage des erreurs PHP
+RUN echo '<?php phpinfo(); ?>' > /var/www/html/public/info.php
 EXPOSE 80
 CMD ["apache2-foreground"]
