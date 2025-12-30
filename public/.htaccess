@@ -3,21 +3,16 @@ DirectoryIndex index.php
 
 <IfModule mod_rewrite.c>
     RewriteEngine On
-
-    # Determine the RewriteBase automatically and set it as environment variable
-    RewriteCond %{REQUEST_URI}::$1 ^(/.+)/(.*)::\2$
-    RewriteRule ^(.*) - [E=BASE:%1]
-
-    # If the requested filename exists, simply serve it
+    
+    # Servir directement les fichiers qui existent (CSS, JS, images, etc.)
     RewriteCond %{REQUEST_FILENAME} -f
     RewriteRule ^ - [L]
-
-    # Rewrite all other queries to the front controller
-    RewriteRule ^ %{ENV:BASE}/index.php [L]
+    
+    # Tout le reste vers index.php
+    RewriteRule ^ index.php [L]
 </IfModule>
 
-<IfModule !mod_rewrite.c>
-    <IfModule mod_alias.c>
-        RedirectMatch 302 ^/$ /index.php/
-    </IfModule>
-</IfModule>
+# IMPORTANT : Cette règle permet d'accéder aux CSS
+<FilesMatch "\.(css|js|jpg|jpeg|png|gif|ico|svg|woff|woff2|ttf|eot)$">
+    Header set Cache-Control "public, max-age=31536000"
+</FilesMatch>
