@@ -13,6 +13,9 @@ RUN a2enmod rewrite headers
 COPY docker/apache.conf /etc/apache2/sites-available/000-default.conf
 RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
 
+# Suivre les symlinks (important pour les assets)
+RUN sed -i 's/Options Indexes FollowSymLinks/Options FollowSymLinks/' /etc/apache2/apache2.conf
+
 # Installer Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
@@ -33,5 +36,12 @@ RUN mkdir -p var/log var/cache
 RUN chown -R www-data:www-data var \
     && chmod -R 775 var
 
+# Permissions pour le dossier public (important pour les assets)
+RUN chown -R www-data:www-data public \
+    && chmod -R 755 public
+
 # Exposer le port
 EXPOSE 80
+
+
+RUN chmod -R 644 public/assets/css/*.css 2>/dev/null || true
