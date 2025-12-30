@@ -1,68 +1,34 @@
 FROM php:8.2-apache
 
-# Installations de base
+# Mise à jour et installation
 RUN apt-get update && apt-get install -y \
     git unzip libpq-dev libicu-dev libzip-dev zip \
     && docker-php-ext-install intl pdo pdo_pgsql zip \
     && apt-get clean
 
-# Activer les modules Apache
+# Activer rewrite
 RUN a2enmod rewrite
 
-# Installer Composer
+# Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# Répertoire de travail
+# Travail
 WORKDIR /var/www/html
 
-# Copier d'abord les fichiers essentiels pour le cache
-COPY composer.json composer.lock symfony.lock ./
-
-# Installer les dépendances (sans les dev)
-RUN composer install --no-dev --no-scripts --no-autoloader
-
-# Copier TOUT le projet (y compris public/.htaccess)
+# Copier tout
 COPY . .
 
-# DEBUG: Vérifier que les fichiers sont bien copiés
-RUN echo "=== Vérification des fichiers importants ===" && \
-    echo "1. .htaccess existe ?" && \
-    ls -la public/.htaccess 2>/dev/null && echo "✓" || echo "✗" && \
-    echo "2. Fichiers CSS dans public/assets/ ?" && \
-    find public/assets -name "*.css" 2>/dev/null | head -5 && \
-    echo "3. Structure de public/ :" && \
-    ls -la public/
+# Dépendances
+RUN composer install --no-dev --optimize-autoloader
 
-# Dump autoload optimisé
-RUN composer dump-autoload --optimize --classmap-authoritative
+# Vérifier
+RUN ls -la public/ && echo "CSS:" && find public/ -name "*.css" 2>/dev/null
 
-# Permissions (TRÈS IMPORTANT)
-RUN chown -R www-data:www-data /var/www/html \
-    && chmod -R 755 /var/www/html/public \
-    && chmod 644 public/.htaccess 2>/dev/null || true
+# Permissions
+RUN chown -R www-data:www-data var public
 
-# Configuration Apache SIMPLIFIÉE et CORRECTE
-RUN echo '<VirtualHost *:80>
-    DocumentRoot /var/www/html/public
-    
-    <Directory /var/www/html/public>
-        AllowOverride All
-        Require all granted
-        Options FollowSymLinks
-        
-        # Important: permettre l\'accès aux fichiers .css
-        <FilesMatch "\.(css|js|jpg|jpeg|png|gif|ico|svg|woff|woff2|ttf|eot)$">
-            Require all granted
-        </FilesMatch>
-    </Directory>
-    
-    ErrorLog ${APACHE_LOG_DIR}/error.log
-    CustomLog ${APACHE_LOG_DIR}/access.log combined
-</VirtualHost>' > /etc/apache2/sites-available/000-default.conf
-
-# Désactiver le message d'avertissement Apache
-RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
+# Config Apache basique (SANS guillemets multilignes problématiques)
+RUN sed -i 's!/var/www/html!/var/www/html/public!g' /etc/apache2/sites-available/000-default.conf
 
 EXPOSE 80
-
 CMD ["apache2-foreground"]
