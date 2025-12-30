@@ -1,0 +1,106 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier un Burger{% endblock %}
+
+{% block body %}
+
+<div class="container-fluid">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h4 class="fw-bold mb-1">Modifier le burger</h4>
+            <p class="text-muted mb-0">
+                Mise à jour des informations du produit
+            </p>
+        </div>
+
+        <a href="{{ path('app_gestionnaire_burgers') }}"
+           class="btn btn-light border">
+            ← Retour
+        </a>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8">
+
+            <div class="card shadow-sm border-0 rounded-4">
+                <div class="card-body p-4">
+
+                    {{ form_start(form) }}
+
+                        
+                        <div class="mb-3">
+                            {{ form_label(form.nom, null, {
+                                label_attr: {'class': 'form-label fw-semibold'}
+                            }) }}
+                            {{ form_widget(form.nom, {
+                                attr: {
+                                    class: 'form-control form-control-lg'
+                                }
+                            }) }}
+                            {{ form_errors(form.nom) }}
+                        </div>
+
+                        
+                        <div class="mb-3">
+                            {{ form_label(form.prix, null, {
+                                label_attr: {'class': 'form-label fw-semibold'}
+                            }) }}
+                            {{ form_widget(form.prix, {
+                                attr: {
+                                    class: 'form-control form-control-lg'
+                                }
+                            }) }}
+                            {{ form_errors(form.prix) }}
+                        </div>
+
+                        
+                        <div class="mb-3">
+                            {{ form_label(form.imageUrl, null, {
+                                label_attr: {'class': 'form-label fw-semibold'}
+                            }) }}
+                            {{ form_widget(form.imageUrl, {
+                                attr: {
+                                    class: 'form-control'
+                                }
+                            }) }}
+                            {{ form_errors(form.imageUrl) }}
+                        </div>
+
+                        
+                        <div class="mb-4">
+                            {{ form_label(form.etat, null, {
+                                label_attr: {'class': 'form-label fw-semibold'}
+                            }) }}
+                            {{ form_widget(form.etat, {
+                                attr: {
+                                    class: 'form-select form-select-lg'
+                                }
+                            }) }}
+                            {{ form_errors(form.etat) }}
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2">
+                            <a href="{{ path('app_gestionnaire_burgers') }}"
+                               class="btn btn-outline-secondary px-4">
+                                Annuler
+                            </a>
+
+                            <button type="submit"
+                                    class="btn btn-warning px-4">
+                                <i class="fa-solid fa-pen me-1"></i>
+                                Mettre à jour
+                            </button>
+                        </div>
+
+                    {{ form_end(form) }}
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

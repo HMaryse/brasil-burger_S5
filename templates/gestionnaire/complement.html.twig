@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des Compléments{% endblock %}
+
+{% block body %}
+<div class="page-header">
+    <div>
+        <h4>Gestion des Compléments</h4>
+        <p class="text-muted">Gérer les compléments (frites, boissons...)</p>
+    </div>
+
+    <a class="btn btn-warning text-white">
+        <i class="fa-solid fa-plus"></i> Ajouter un complément
+    </a>
+</div>
+
+<div class="card shadow-sm rounded-4 mt-3">
+    <table class="table align-middle mb-0">
+        <thead class="table-light">
+            <tr>
+                <th>Image</th>
+                <th>Nom</th>
+                <th>Prix</th>
+                <th class="text-end">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for c in [
+                {nom:'Frites', prix:1000, image:'https://images.unsplash.com/photo-1541592106381-b31e9677c0e5'},
+                {nom:'Boisson', prix:500, image:'https://images.unsplash.com/photo-1600891964599-f61ba0e24092'}
+            ] %}
+            <tr>
+                <td>
+                    <img src="{{ c.image }}" class="rounded" width="50">
+                </td>
+                <td>{{ c.nom }}</td>
+                <td class="text-danger fw-bold">{{ c.prix }} FCFA</td>
+                <td class="text-end">
+                    <button class="btn btn-outline-primary btn-sm">
+                        <i class="fa-solid fa-pen"></i> Modifier
+                    </button>
+                    <button class="btn btn-outline-danger btn-sm">
+                        <i class="fa-solid fa-trash"></i> Supprimer
+                    </button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

@@ -1,0 +1,75 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des Commandes{% endblock %}
+
+{% block body %}
+
+{% macro table(titre, commandes, couleur) %}
+<div class="card mb-4 shadow-sm border-0">
+    <div class="card-header bg-{{ couleur }} text-white fw-bold">
+        {{ titre }}
+    </div>
+
+    <div class="card-body p-0">
+        <table class="table mb-0 align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>#</th>
+                    <th>Client</th>
+                    <th>Date</th>
+                    <th>Total</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for c in commandes %}
+                    <tr>
+                        <td>#{{ c.id }}</td>
+                        <td>{{ c.client.nomComplet }}</td>
+                        <td>{{ c.dateCommande|date('d/m/Y H:i') }}</td>
+                        <td class="fw-bold text-danger">
+                            {{ c.total }} FCFA
+                        </td>
+                        <td>
+                            <a href="{{ path('app_gestionnaire_commande_show', { id: c.id }) }}"
+                               class="btn btn-sm btn-outline-primary">
+                                Détails
+                            </a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="5" class="text-center text-muted">
+                            Aucune commande
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endmacro %}
+
+<h4 class="mb-4">Gestion des Commandes</h4>
+
+{{ _self.table('Commandes en cours', enCours, 'secondary') }}
+{{ _self.table('Commandes validées', validees, 'success') }}
+{{ _self.table('Commandes terminées', terminees, 'warning') }}
+{{ _self.table('Commandes annulées', annulees, 'danger') }}
+
+{% if totalPages > 1 %}
+<nav class="mt-4">
+    <ul class="pagination justify-content-center">
+        {% for i in 1..totalPages %}
+            <li class="page-item {{ page == i ? 'active' }}">
+                <a class="page-link"
+                   href="{{ path('app_gestionnaire_commandes', { page: i }) }}">
+                    {{ i }}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+</nav>
+{% endif %}
+
+{% endblock %}

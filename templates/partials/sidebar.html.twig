@@ -1,0 +1,59 @@
+<aside class="sidebar">
+    <div class="brand">
+        <span class="logo">🍔</span>
+        <div>
+            <strong>Brasil Burger</strong><br>
+            <small>Gestionnaire</small>
+        </div>
+    </div>
+
+    <ul class="menu">
+        <li class="{% if app.request.attributes.get('_route') == 'app_gestionnaire_dashboard' %}active{% endif %}">
+            <a href="{{ path('app_gestionnaire_dashboard') }}">
+                <i class="fa-solid fa-chart-line"></i>
+                <span>Tableau de bord</span>
+            </a>
+        </li>
+
+        <li class="{% if app.request.attributes.get('_route') == 'app_gestionnaire_burgers' %}active{% endif %}">
+            <a href="{{ path('app_gestionnaire_burgers') }}">
+                <i class="fa-solid fa-burger"></i>
+                <span>Burgers</span>
+            </a>
+        </li>
+
+        <li class="{% if app.request.attributes.get('_route') == 'app_gestionnaire_menus' %}active{% endif %}">
+            <a href="{{ path('app_gestionnaire_menus') }}">
+                <i class="fa-solid fa-list"></i>
+                <span>Menus</span>
+            </a>
+        </li>
+
+        <li class="{% if app.request.attributes.get('_route') == 'app_gestionnaire_complements' %}active{% endif %}">
+            <a href="{{ path('app_gestionnaire_complements') }}">
+                <i class="fa-solid fa-plus"></i>
+                <span>Compléments</span>
+            </a>
+        </li>
+
+        <li class="{% if app.request.attributes.get('_route') == 'app_gestionnaire_commandes' %}active{% endif %}">
+            <a href="{{ path('app_gestionnaire_commandes') }}">
+                <i class="fa-solid fa-cart-shopping"></i>
+                <span>Commandes</span>
+            </a>
+        </li>
+
+        <li class="{% if app.request.attributes.get('_route') == 'app_gestionnaire_livraisons' %}active{% endif %}">
+            <a href="{{ path('app_gestionnaire_livraisons') }}">
+                <i class="fa-solid fa-truck"></i>
+                <span>Livraisons</span>
+            </a>
+        </li>
+    </ul>
+
+    <div class="logout-container">
+        <a href="{{ path('app_logout') }}" class="logout">
+            <i class="fa-solid fa-right-from-bracket"></i> Déconnexion
+        </a>
+    </div>
+</aside>

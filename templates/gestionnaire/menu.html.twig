@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des Menus{% endblock %}
+
+{% block body %}
+<div class="page-header">
+    <div>
+        <h4>Gestion des Menus</h4>
+        <p class="text-muted">Gérer les menus (burger + boisson + frites)</p>
+    </div>
+
+    <a class="btn btn-warning text-white">
+        <i class="fa-solid fa-plus"></i> Ajouter un menu
+    </a>
+</div>
+
+<div class="row g-4 mt-2">
+    {% for menu in [
+        {nom:'Menu Classic', prix:5000},
+        {nom:'Menu Cheese', prix:5500},
+        {nom:'Menu Brasil', prix:6000}
+    ] %}
+        <div class="col-md-4">
+            <div class="card shadow-sm rounded-4">
+                <img src="https://images.unsplash.com/photo-1550547660-d9450f859349"
+                     class="card-img-top rounded-top-4">
+
+                <span class="badge bg-success position-absolute m-2">Disponible</span>
+
+                <div class="card-body">
+                    <h6>{{ menu.nom }}</h6>
+                    <p class="text-danger fw-bold">{{ menu.prix }} FCFA</p>
+
+                    <small class="text-muted">Composition :</small>
+                    <ul class="small">
+                        <li>Burger</li>
+                        <li>Boisson</li>
+                        <li>Frites</li>
+                    </ul>
+
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-outline-primary btn-sm w-50">
+                            <i class="fa-solid fa-pen"></i> Modifier
+                        </button>
+                        <button class="btn btn-outline-warning btn-sm w-50">
+                            <i class="fa-solid fa-box-archive"></i> Archiver
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

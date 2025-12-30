@@ -1,0 +1,113 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Affectation des Livraisons{% endblock %}
+
+{% block body %}
+<div class="page-header">
+    <div>
+        <h4>Affectation des Livraisons</h4>
+        <p class="text-muted">Regrouper et assigner les commandes aux livreurs par zone</p>
+    </div>
+</div>
+
+
+<div class="zones-cards">
+    <div class="zone-card">
+        <i class="fa-solid fa-location-dot"></i>
+        <div>
+            <strong>Zone Centre</strong>
+            <p>Dakar Plateau</p>
+            <span>1500 FCFA</span>
+        </div>
+    </div>
+
+    <div class="zone-card">
+        <i class="fa-solid fa-location-dot"></i>
+        <div>
+            <strong>Zone Ouest</strong>
+            <p>Almadies, Ouakam</p>
+            <span>2000 FCFA</span>
+        </div>
+    </div>
+
+    <div class="zone-card">
+        <i class="fa-solid fa-location-dot"></i>
+        <div>
+            <strong>Zone Nord</strong>
+            <p>Yoff, Parcelles</p>
+            <span>2500 FCFA</span>
+        </div>
+    </div>
+
+    <div class="zone-card">
+        <i class="fa-solid fa-location-dot"></i>
+        <div>
+            <strong>Zone Sud</strong>
+            <p>Medina, Fass</p>
+            <span>1800 FCFA</span>
+        </div>
+    </div>
+</div>
+
+
+<div class="zone-block">
+    <div class="zone-header">
+        <h6>Zone Centre</h6>
+        <button class="btn btn-warning btn-sm">Affecter sélection</button>
+    </div>
+
+    <table class="table livraison-table">
+        <thead>
+            <tr>
+                <th>Commande</th>
+                <th>Client</th>
+                <th>Adresse</th>
+                <th>Quartier</th>
+                <th>Total</th>
+                <th>Assigner à</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>#1025</td>
+                <td>Moussa Kane</td>
+                <td>Rue 12</td>
+                <td>Plateau</td>
+                <td class="price">12 000 FCFA</td>
+                <td>
+                    <select class="form-select">
+                        <option>Choisir livreur</option>
+                        <option>Mamadou Seck</option>
+                        <option>Babacar Diallo</option>
+                    </select>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+
+<div class="livreurs-section">
+    <h6>Équipe de livreurs</h6>
+
+    <div class="livreurs-cards">
+        <div class="livreur-card available">
+            <strong>Mamadou Seck</strong>
+            <p>+221 77 111 11 11</p>
+            <span>Disponible</span>
+        </div>
+
+        <div class="livreur-card available">
+            <strong>Babacar Diallo</strong>
+            <p>+221 77 222 22 22</p>
+            <span>Disponible</span>
+        </div>
+
+        <div class="livreur-card busy">
+            <strong>Cheikh Ndiaye</strong>
+            <p>+221 77 333 33 33</p>
+            <span>Occupé</span>
+        </div>
+    </div>
+</div>
+{% endblock %}

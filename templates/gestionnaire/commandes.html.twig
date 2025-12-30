@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+{% block title %}Gestion des Commandes{% endblock %}
+
+{% block body %}
+<div class="page-header">
+    <div>
+        <h4>Gestion des Commandes</h4>
+        <p class="text-muted">Gérer et suivre les commandes</p>
+    </div>
+</div>
+
+<div class="row g-3">
+    {% for commande in commandes %}
+        <div class="col-md-6">
+            <div class="card shadow-sm rounded-4 border-0">
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="fw-bold">
+                                Commande #{{ commande.id }}
+                            </h6>
+                            <small class="text-muted">
+                                {{ commande.client.nomComplet }}
+                            </small>
+                        </div>
+
+                        <span class="badge bg-info">
+                            {{ commande.statut.value }}
+                        </span>
+                    </div>
+
+                    <hr>
+
+                    <p class="mb-1">
+                        <strong>Total :</strong>
+                        <span class="text-danger fw-bold">
+                            {{ commande.total }} FCFA
+                        </span>
+                    </p>
+
+                    <p class="mb-2">
+                        <strong>Mode :</strong>
+                        {{ commande.modeConsommation.value }}
+                    </p>
+
+                    <a href="{{ path('app_gestionnaire_commande_show', {id: commande.id}) }}"
+                       class="btn btn-outline-primary btn-sm w-100">
+                        Voir les détails
+                    </a>
+
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

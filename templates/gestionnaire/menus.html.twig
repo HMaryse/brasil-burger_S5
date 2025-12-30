@@ -1,0 +1,95 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des Menus{% endblock %}
+
+{% block body %}
+<div class="page-header">
+    <div>
+        <h4>Gestion des Menus</h4>
+        <p class="text-muted">Gérer les menus (burger + boisson + frites)</p>
+    </div>
+
+    <a href="{{ path('app_gestionnaire_menu_add') }}"
+       class="btn btn-warning text-white">
+        <i class="fa-solid fa-plus"></i> Ajouter un menu
+    </a>
+</div>
+
+<div class="row g-4 mt-3">
+
+    {% for menu in menus %}
+        <div class="col-md-4">
+            <div class="card shadow-sm rounded-4 border-0 position-relative">
+
+                <img src="{{ menu.imageUrl ?: 'https://images.unsplash.com/photo-1550547660-d9450f859349' }}"
+                     class="card-img-top rounded-top-4"
+                     style="height:180px; object-fit:cover;">
+
+                {% if menu.etat.value == 'DISPONIBLE' %}
+                    <span class="badge bg-success position-absolute m-2">
+                        Disponible
+                    </span>
+                {% else %}
+                    <span class="badge bg-secondary position-absolute m-2">
+                        Indisponible
+                    </span>
+                {% endif %}
+
+                <div class="card-body">
+                    <h6 class="fw-bold mb-1">{{ menu.nom }}</h6>
+                    <p class="text-danger fw-bold mb-2">
+                        {{ menu.prix }} FCFA
+                    </p>
+
+                    <small class="text-muted">Composition :</small>
+                    <ul class="small mb-3">
+                        <li>Burger</li>
+                        <li>Boisson</li>
+                        <li>Frites</li>
+                    </ul>
+
+                    <div class="d-flex gap-2">
+                        <a href="{{ path('app_gestionnaire_menu_edit', {id: menu.id}) }}"
+                           class="btn btn-outline-primary btn-sm w-50">
+                            <i class="fa-solid fa-pen"></i> Modifier
+                        </a>
+
+                        <form method="post"
+                              action="{{ path('app_gestionnaire_menu_delete', {id: menu.id}) }}"
+                              class="w-50"
+                              onsubmit="return confirm('Supprimer ce menu ?');">
+                            <input type="hidden" name="_token"
+                                   value="{{ csrf_token('delete_menu_' ~ menu.id) }}">
+                            <button class="btn btn-outline-danger btn-sm w-100">
+                                <i class="fa-solid fa-trash"></i> Supprimer
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    {% else %}
+        <p class="text-muted">Aucun menu trouvé.</p>
+    {% endfor %}
+</div>
+
+
+{% if totalPages is defined and totalPages > 1 %}
+<nav class="mt-4">
+    <ul class="pagination justify-content-center">
+
+        {% for i in 1..totalPages %}
+            <li class="page-item {{ page == i ? 'active' }}">
+                <a class="page-link"
+                   href="{{ path('app_gestionnaire_menus', {page: i}) }}">
+                    {{ i }}
+                </a>
+            </li>
+        {% endfor %}
+
+    </ul>
+</nav>
+{% endif %}
+
+{% endblock %}

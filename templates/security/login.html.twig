@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Connexion | Brasil Burger</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #8b0027ac, #b35c00ff);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .login-card {
+            background: #fff;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 420px;
+            padding: 35px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+
+        .login-logo {
+            font-size: 48px;
+            color: #8B0027;
+        }
+
+        .login-title {
+            font-weight: 700;
+            color: #8B0027;
+        }
+
+        .btn-login {
+            background: linear-gradient(90deg, #FFA629, #8B0027);
+            border: none;
+            color: white;
+            font-weight: 600;
+            border-radius: 10px;
+        }
+
+        .btn-login:hover {
+            opacity: 0.9;
+        }
+
+        .form-control {
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="login-card text-center">
+
+    <div class="mb-3">
+        <i class="fa-solid fa-burger login-logo"></i>
+    </div>
+
+    <h4 class="login-title mb-1">Brasil Burger</h4>
+    <p class="text-muted mb-4">Connexion Gestionnaire</p>
+
+    {% if error %}
+        <div class="alert alert-danger text-start">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            Identifiants incorrects
+        </div>
+    {% endif %}
+
+    <form method="post">
+
+        <div class="mb-3 text-start">
+            <label class="form-label fw-semibold">
+                <i class="fa-solid fa-envelope"></i> Email
+            </label>
+            <input type="email"
+                   name="email"
+                   class="form-control"
+                   value="{{ last_email }}"
+                   placeholder="admin@brasilburger.com"
+                   required>
+        </div>
+
+        <div class="mb-4 text-start">
+            <label class="form-label fw-semibold">
+                <i class="fa-solid fa-lock"></i> Mot de passe
+            </label>
+            <input type="password"
+                   name="password"
+                   class="form-control"
+                   placeholder="••••••••"
+                   required>
+        </div>
+
+        <button class="btn btn-login w-100 py-2">
+            <i class="fa-solid fa-right-to-bracket"></i>
+            Se connecter
+        </button>
+    </form>
+
+</div>
+
+</body>
+</html>

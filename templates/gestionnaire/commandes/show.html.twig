@@ -1,0 +1,111 @@
+{% extends 'base.html.twig' %}
+{% block title %}Commande #{{ commande.id }}{% endblock %}
+
+{% block body %}
+<div class="page-header d-flex justify-content-between align-items-center">
+    <div>
+        <h4>Commande #{{ commande.id }}</h4>
+        <p class="text-muted">{{ commande.client.nomComplet }}</p>
+    </div>
+
+    <a href="{{ path('app_gestionnaire_commandes') }}"
+       class="btn btn-light border">
+        ← Retour
+    </a>
+</div>
+
+<div class="row g-4 mt-3">
+
+    <div class="col-md-8">
+        <div class="card shadow-sm border-0 rounded-4">
+            <div class="card-body">
+                <h6 class="fw-bold mb-3">Détails de la commande</h6>
+
+                <ul class="list-group list-group-flush">
+                    {% for item in commande.items %}
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span>{{ item.libelle }}</span>
+                            <span class="fw-bold">
+                                {{ item.prixTotal }} FCFA
+                            </span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow-sm border-0 rounded-4">
+            <div class="card-body">
+
+                <p>
+                    <strong>Total :</strong>
+                    <span class="text-danger fw-bold">
+                        {{ commande.total }} FCFA
+                    </span>
+                </p>
+
+                <p>
+                    <strong>Statut :</strong>
+                    {{ commande.statut.value }}
+                </p>
+
+                <p>
+                    <strong>Mode :</strong>
+                    {{ commande.modeConsommation.value }}
+                </p>
+
+                {% if commande.modeConsommation.value == 'LIVRAISON' %}
+                    <p>
+                        <strong>Adresse :</strong>
+                        {{ commande.adresse }}
+                    </p>
+                {% endif %}
+
+                <hr>
+
+                <a href="{{ path('app_gestionnaire_commande_statut', {
+                    id: commande.id,
+                    action: 'valider'
+                }) }}" class="btn btn-success w-100 mb-2">
+                    Valider
+                </a>
+
+                <a href="{{ path('app_gestionnaire_commande_statut', {
+                    id: commande.id,
+                    action: 'annuler'
+                }) }}" class="btn btn-danger w-100 mb-2">
+                    Annuler
+                </a>
+
+                <a href="{{ path('app_gestionnaire_commande_statut', {
+                    id: commande.id,
+                    action: 'terminer'
+                }) }}" class="btn btn-warning w-100 mb-2">
+                    Terminer
+                </a>
+
+                {% if commande.modeConsommation.value == 'LIVRAISON' %}
+                    <form method="post"
+                          action="{{ path('app_gestionnaire_commande_livreur', {id: commande.id}) }}">
+                        <select name="livreur_id" class="form-select mb-2">
+                            {% for livreur in livreurs %}
+                                <option value="{{ livreur.id }}">
+                                    {{ livreur.nom }}
+                                </option>
+                            {% endfor %}
+                        </select>
+
+                        <button class="btn btn-outline-primary w-100">
+                            Attribuer à un livreur
+                        </button>
+                    </form>
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

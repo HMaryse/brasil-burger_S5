@@ -1,0 +1,135 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Tableau de bord{% endblock %}
+
+{% block body %}
+
+<h2 class="page-title mb-1">
+    <i class="fa-solid fa-chart-line"></i> Tableau de bord
+</h2>
+<p class="page-subtitle text-muted mb-4">
+    Vue d’ensemble des statistiques du jour
+</p>
+
+
+<div class="row g-4 mb-4">
+
+    <div class="col-md-3">
+        <div class="stat-card gradient-orange">
+            <div class="icon-circle">
+                <i class="fa-solid fa-clock"></i>
+            </div>
+            <span>En cours</span>
+            <h3>{{ enCours }}</h3>
+            <small>Commandes du jour</small>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="stat-card gradient-green">
+            <div class="icon-circle">
+                <i class="fa-solid fa-check"></i>
+            </div>
+            <span>Validées</span>
+            <h3>{{ validees }}</h3>
+            <small>Commandes du jour</small>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="stat-card gradient-purple">
+            <div class="icon-circle">
+                <i class="fa-solid fa-money-bill-wave"></i>
+            </div>
+            <span>Recettes</span>
+            <h3>
+                {{ recettes|number_format(0, ' ', ' ') }} FCFA
+            </h3>
+            <small>Total du jour</small>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="stat-card gradient-red">
+            <div class="icon-circle">
+                <i class="fa-solid fa-xmark"></i>
+            </div>
+            <span>Annulées</span>
+            <h3>{{ annulees }}</h3>
+            <small>Commandes du jour</small>
+        </div>
+    </div>
+
+</div>
+
+<div class="row g-4">
+
+    
+    <div class="col-md-7">
+        <div class="box">
+            <h5 class="mb-3"> Top 5 Burgers du jour</h5>
+
+            <table class="table align-middle">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Produit</th>
+                        <th>Ventes</th>
+                        <th>Recette</th>
+                        <th>Performance</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for burger in topBurgers %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td>{{ burger.libelle }}</td>
+                            <td>{{ burger.ventes }}</td>
+                            <td class="text-success fw-bold">
+                                {{ burger.recette|number_format(0, ' ', ' ') }} FCFA
+                            </td>
+                            <td>
+                                <div class="progress">
+                                    <div class="progress-bar bg-warning"
+                                         style="width: {{ (burger.ventes / topBurgers[0].ventes) * 100 }}%">
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="5" class="text-center text-muted">
+                                Aucune vente aujourd’hui
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="col-md-5">
+        <div class="box">
+            <h5 class="mb-3"> Commandes récentes</h5>
+
+            <ul class="recent-orders">
+                {% for commande in recentes %}
+                    <li>
+                        <strong>#{{ commande.id }}</strong><br>
+                        {{ commande.client.nomComplet }}
+                        <span class="price">
+                            {{ commande.total|number_format(0, ' ', ' ') }} FCFA
+                        </span>
+                    </li>
+                {% else %}
+                    <li class="text-muted">
+                        Aucune commande récente
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}
