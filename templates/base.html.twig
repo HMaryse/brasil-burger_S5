@@ -4,6 +4,410 @@
     <meta charset="UTF-8">
     <title>{% block title %}Gestionnaire{% endblock %}</title>
 
+     
+    <style>
+            /* ===== GLOBAL ===== */
+        body {
+            background: #f4f5f7;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .main-content {
+            padding: 25px 30px;
+            width: 100%;
+        }
+
+        /* ===== SIDEBAR ===== */
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            height: 100vh;
+            background: #ffffff;
+            border-right: 1px solid #eee;
+            padding: 20px 15px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .brand .logo {
+            font-size: 28px;
+        }
+
+        .menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            flex-grow: 1;
+        }
+
+        .menu li {
+            margin-bottom: 8px;
+        }
+
+        .menu a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            border-radius: 10px;
+            color: #555;
+            font-weight: 500;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+
+        .menu a i {
+            width: 18px;
+            text-align: center;
+        }
+
+        .menu li.active a,
+        .menu a:hover {
+            background: #ff9800;
+            color: white;
+        }
+
+        /* Logout */
+        .logout-container {
+            margin-top: 20px;
+        }
+
+        .logout {
+            width: 100%;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid #ff9800;
+            background: #fff;
+            color: #ff9800;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .logout:hover {
+            background: #ff9800;
+            color: white;
+        }
+
+
+        /* ===== TITRES ===== */
+        .page-title {
+            font-weight: 700;
+            font-size: 22px;
+        }
+
+        .page-subtitle {
+            color: #777;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        /* ===== STAT CARDS (PLUS PETITES) ===== */
+        .stat-card {
+            padding: 15px;
+            border-radius: 14px;
+            color: #fff;
+            position: relative;
+            min-height: 110px;
+        }
+
+        .stat-card span {
+            font-size: 13px;
+        }
+
+        .stat-card h3 {
+            font-size: 24px;
+            margin: 6px 0;
+        }
+
+        .stat-card small {
+            font-size: 12px;
+            opacity: 0.85;
+        }
+
+        .icon-circle {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 6px;
+        }
+
+        /* ===== GRADIENTS (IDENTIQUES) ===== */
+        .gradient-orange {
+            background: linear-gradient(135deg, #ff9800, #ff5722);
+        }
+
+        .gradient-green {
+            background: linear-gradient(135deg, #00c853, #64dd17);
+        }
+
+        .gradient-purple {
+            background: linear-gradient(135deg, #7b1fa2, #ab47bc);
+        }
+
+        .gradient-red {
+            background: linear-gradient(135deg, #e53935, #ef5350);
+        }
+
+        /* ===== BOXES ===== */
+        .box {
+            background: #fff;
+            padding: 18px;
+            border-radius: 14px;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+        }
+
+        /* ===== BURGERS PAGE ===== */
+        .burger-card {
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        .burger-card img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+        }
+
+        .burger-card .card-body {
+            padding: 14px;
+        }
+
+        .badge-dispo {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #00c853;
+            color: #fff;
+            font-size: 11px;
+            padding: 4px 8px;
+            border-radius: 12px;
+        }
+
+        .price {
+            color: #e53935;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .table img {
+            object-fit: cover;
+        }
+        /* Filtres */
+        .filters {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+        }
+
+        /* Carte commande */
+        .commande-card {
+            display: flex;
+            justify-content: space-between;
+            background: #fff;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+        }
+
+        /* Gauche */
+        .commande-left {
+            width: 65%;
+        }
+
+        .commande-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .badge-orange {
+            background: #ffb703;
+            color: #fff;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+        }
+
+        .commande-section {
+            margin-top: 15px;
+        }
+
+        .commande-section h6 {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .livraison {
+            background: #fff4e5;
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        .articles {
+            background: #eaf7ee;
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        .articles ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .articles li {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+        }
+
+        /* Droite */
+        .commande-right {
+            width: 30%;
+        }
+
+        .total-box {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: white;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        /* Pagination */
+        .pagination-box {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 25px;
+        }
+
+        .pagination-box button {
+            border: none;
+            background: #f1f1f1;
+            padding: 6px 12px;
+            border-radius: 6px;
+        }
+
+        .pagination-box .active {
+            background: #ff9800;
+            color: white;
+        }
+        /* ZONES */
+        .zones-cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .zone-card {
+            background: #fff;
+            border-radius: 14px;
+            padding: 15px;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        }
+
+        .zone-card i {
+            font-size: 22px;
+            color: #ff9800;
+        }
+
+        .zone-card span {
+            color: #ff5722;
+            font-weight: 600;
+        }
+
+        /* ZONE TABLE */
+        .zone-block {
+            background: #fff;
+            border-radius: 14px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .zone-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .livraison-table th {
+            font-size: 13px;
+            color: #777;
+        }
+
+        .price {
+            color: #e53935;
+            font-weight: bold;
+        }
+
+        /* LIVREURS */
+        .livreurs-section {
+            margin-top: 20px;
+        }
+
+        .livreurs-cards {
+            display: flex;
+            gap: 15px;
+        }
+
+        .livreur-card {
+            background: #fff;
+            padding: 15px;
+            border-radius: 12px;
+            width: 220px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        }
+
+        .livreur-card span {
+            display: inline-block;
+            margin-top: 5px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+
+        .livreur-card.available span {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .livreur-card.busy span {
+            background: #eceff1;
+            color: #546e7a;
+        }
+        .pagination .page-item.active .page-link {
+            background-color: #FFA629;
+            border-color: #FFA629;
+            color: #fff;
+        }
+
+
+    </style>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
 
