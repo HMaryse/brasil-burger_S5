@@ -15,6 +15,8 @@ namespace Data
         public DbSet<Commande> Commandes { get; set; }
         public DbSet<CommandeItem> CommandeItems { get; set; }
         public DbSet<Paiement> Paiements { get; set; }
+        public DbSet<Zone> Zone { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

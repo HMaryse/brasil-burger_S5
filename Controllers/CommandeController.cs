@@ -116,17 +116,19 @@ public class CommandeController : Controller
             var returnUrl = HttpContext.Request.Path;
             return RedirectToAction("Login", "Auth", new { returnUrl });
         }
-
+        
         var panier = PanierHelper.GetPanier(HttpContext);
         if (!panier.Items.Any())
             return RedirectToAction("Panier");
+
+        ViewBag.Zones = _context.Zone.ToList();
 
         return View(panier);
     }
 
     [HttpPost]
     [HttpPost]
-    public IActionResult Confirmer(ModeConsommation ModeConsommation, ModePaiement ModePaiement, string? Adresse)
+    public IActionResult Confirmer(ModeConsommation ModeConsommation, ModePaiement ModePaiement, string? Adresse,int? ZoneId)
         {
             var clientId = HttpContext.Session.GetInt32("ClientId");
             if (clientId == null)
@@ -146,6 +148,7 @@ public class CommandeController : Controller
                 Statut = StatutCommande.EN_COURS,
                 ModeConsommation = ModeConsommation,
                 Adresse = ModeConsommation == ModeConsommation.LIVRAISON ? Adresse : null,
+                ZoneId = ModeConsommation == ModeConsommation.LIVRAISON ? ZoneId : null,
                 EstPaye = true
             };
 

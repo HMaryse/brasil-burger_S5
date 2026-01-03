@@ -135,22 +135,30 @@
             toggleAdresseLivraison();
         }
 
-        // 🔹 AJOUT : gestion affichage adresse livraison
+        // 🔹 AJOUT : gestion affichage adresse + zone
         function toggleAdresseLivraison() {
             const livraison = document.querySelector(
                 'input[name="ModeConsommation"][value="LIVRAISON"]'
             );
 
             const blocAdresse = document.getElementById("bloc-adresse-livraison");
+            const blocZone = document.getElementById("bloc-zone-livraison");
+
             const champAdresse = document.getElementById("AdresseLivraison");
+            const selectZone = document.getElementById("ZoneId");
 
             if (livraison && livraison.checked) {
                 blocAdresse.style.display = "block";
+                blocZone.style.display = "block";
                 champAdresse.required = true;
+                selectZone.required = true;
             } else {
                 blocAdresse.style.display = "none";
+                blocZone.style.display = "none";
                 champAdresse.required = false;
+                selectZone.required = false;
                 champAdresse.value = "";
+                selectZone.value = "";
             }
         }
     </script>
@@ -208,6 +216,7 @@
                     </div>
 
                 </div>
+
                 
                 <div id="bloc-adresse-livraison" class="mt-4" style="display:none;">
                     <h5 class="section-title">Adresse de livraison</h5>
@@ -216,8 +225,22 @@
                         name="Adresse"
                         class="form-control"
                         rows="3"
-                        placeholder="Ex : Dakar, Liberté 6, villa n°12, près de la pharmacie">
+                        placeholder="Ex : Dakar, Liberté 6, villa n°12">
                     </textarea>
+                </div>
+
+                
+                <div id="bloc-zone-livraison" class="mt-4" style="display:none;">
+                    <h5 class="section-title">Zone de livraison</h5>
+                    <select id="ZoneId" name="ZoneId" class="form-select">
+                        <option value="">-- Choisir une zone --</option>
+                        @foreach (var zone in ViewBag.Zones)
+                        {
+                            <option value="@zone.Id">
+                                @zone.Nom (@zone.Prix FCFA)
+                            </option>
+                        }
+                    </select>
                 </div>
 
                 <h5 class="section-title mt-4">Mode de paiement</h5>
@@ -285,4 +308,3 @@
 
 </body>
 </html>
-
