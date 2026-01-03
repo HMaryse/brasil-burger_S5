@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\HILLY MARYSE\\Desktop\\Licence ISM\\L3 GLRS\\Web\\BrasilBurger_C#\\BrasilBurger_C#\\BrasilBurger_C#.csproj": {}
+    "C:\\Users\\HILLY MARYSE\\brasil-burger\\BrasilBurger_C#.csproj": {}
   },
   "projects": {
-    "C:\\Users\\HILLY MARYSE\\Desktop\\Licence ISM\\L3 GLRS\\Web\\BrasilBurger_C#\\BrasilBurger_C#\\BrasilBurger_C#.csproj": {
+    "C:\\Users\\HILLY MARYSE\\brasil-burger\\BrasilBurger_C#.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\HILLY MARYSE\\Desktop\\Licence ISM\\L3 GLRS\\Web\\BrasilBurger_C#\\BrasilBurger_C#\\BrasilBurger_C#.csproj",
+        "projectUniqueName": "C:\\Users\\HILLY MARYSE\\brasil-burger\\BrasilBurger_C#.csproj",
         "projectName": "BrasilBurger_C#",
-        "projectPath": "C:\\Users\\HILLY MARYSE\\Desktop\\Licence ISM\\L3 GLRS\\Web\\BrasilBurger_C#\\BrasilBurger_C#\\BrasilBurger_C#.csproj",
+        "projectPath": "C:\\Users\\HILLY MARYSE\\brasil-burger\\BrasilBurger_C#.csproj",
         "packagesPath": "C:\\Users\\HILLY MARYSE\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\HILLY MARYSE\\Desktop\\Licence ISM\\L3 GLRS\\Web\\BrasilBurger_C#\\BrasilBurger_C#\\obj\\",
+        "outputPath": "C:\\Users\\HILLY MARYSE\\brasil-burger\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\HILLY MARYSE\\AppData\\Roaming\\NuGet\\NuGet.Config"

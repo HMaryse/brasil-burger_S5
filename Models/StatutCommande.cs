@@ -1,11 +1,19 @@
+using NpgsqlTypes;
+
 namespace Models
 {
     public enum StatutCommande
     {
+        [PgName("EN_COURS")]
         EN_COURS,
-        PRETE,
-        EN_ROUTE,
-        LIVREE,
+
+        [PgName("VALIDÉE")]
+        VALIDEE,
+
+        [PgName("TERMINÉE")]
+        TERMINEE,
+
+        [PgName("ANNULÉE")]
         ANNULEE
     }
 }

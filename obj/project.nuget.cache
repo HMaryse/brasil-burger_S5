@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "P4SmYesfxzI=",
+  "dgSpecHash": "naxOiCl84TQ=",
   "success": true,
-  "projectFilePath": "C:\\Users\\HILLY MARYSE\\Desktop\\Licence ISM\\L3 GLRS\\Web\\BrasilBurger_C#\\BrasilBurger_C#\\BrasilBurger_C#.csproj",
+  "projectFilePath": "C:\\Users\\HILLY MARYSE\\brasil-burger\\BrasilBurger_C#.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\HILLY MARYSE\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\HILLY MARYSE\\.nuget\\packages\\microsoft.aspnetcore.authentication\\2.3.0\\microsoft.aspnetcore.authentication.2.3.0.nupkg.sha512",

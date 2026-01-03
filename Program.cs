@@ -6,9 +6,7 @@ using Npgsql;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
 builder.Services.AddControllersWithViews();
-
 
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
@@ -18,11 +16,11 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 
-
 var dataSourceBuilder = new NpgsqlDataSourceBuilder(
     builder.Configuration.GetConnectionString("NeonDb")
 );
 
+// désactiver la traduction des noms
 dataSourceBuilder.MapEnum<ModeConsommation>(
     "mode_consommation_type",
     new Npgsql.NameTranslation.NpgsqlNullNameTranslator()
@@ -48,16 +46,11 @@ dataSourceBuilder.MapEnum<EtatType>(
     new Npgsql.NameTranslation.NpgsqlNullNameTranslator()
 );
 
-
-
 var dataSource = dataSourceBuilder.Build();
-
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(dataSource)
 );
-
-
 
 builder.Services.AddScoped<IBurgerService, BurgerService>();
 builder.Services.AddScoped<IMenuService, MenuService>();
@@ -65,7 +58,6 @@ builder.Services.AddScoped<IClientAuthService, ClientAuthService>();
 builder.Services.AddScoped<IComplementService, ComplementService>();
 
 var app = builder.Build();
-
 
 if (!app.Environment.IsDevelopment())
 {
@@ -75,12 +67,10 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseSession();
 
 app.UseRouting();
 app.UseAuthorization();
-
 
 app.MapControllerRoute(
     name: "default",

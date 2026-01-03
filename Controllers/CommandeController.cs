@@ -25,8 +25,7 @@ public class CommandeController : Controller
         _context = context;
     }
 
-    //  PANIER 
-
+    // PANIER
     public IActionResult Ajouter(int id, string type)
     {
         var panier = PanierHelper.GetPanier(HttpContext);
@@ -83,8 +82,7 @@ public class CommandeController : Controller
         return RedirectToAction("Panier");
     }
 
-    //  COMPLEMENTS 
-
+    // COMPLEMENTS
     public IActionResult Complements(int id, string type)
     {
         return View(new ComplementSelectionViewModel
@@ -110,8 +108,7 @@ public class CommandeController : Controller
         return RedirectToAction("Panier");
     }
 
-    // VALIDATION 
-
+    // VALIDATION
     public IActionResult Valider()
     {
         if (HttpContext.Session.GetInt32("ClientId") == null)
@@ -128,62 +125,60 @@ public class CommandeController : Controller
     }
 
     [HttpPost]
-    public IActionResult Confirmer(ModeConsommation ModeConsommation, ModePaiement ModePaiement)
+    [HttpPost]
+public IActionResult Confirmer(ModeConsommation ModeConsommation, ModePaiement ModePaiement)
+{
+    var clientId = HttpContext.Session.GetInt32("ClientId");
+    if (clientId == null)
     {
-        var clientId = HttpContext.Session.GetInt32("ClientId");
-        if (clientId == null)
-        {
-            var returnUrl = HttpContext.Request.Path;
-            return RedirectToAction("Login", "Auth", new { returnUrl });
-        }
+        var returnUrl = HttpContext.Request.Path;
+        return RedirectToAction("Login", "Auth", new { returnUrl });
+    }
 
-        var panier = PanierHelper.GetPanier(HttpContext);
-        if (!panier.Items.Any())
-            return RedirectToAction("Panier");
+    var panier = PanierHelper.GetPanier(HttpContext);
+    if (!panier.Items.Any())
+        return RedirectToAction("Panier");
 
-        var commande = new Commande
-        {
-            ClientId = clientId.Value,
-            DateCommande = DateTime.UtcNow,
-            Statut = StatutCommande.EN_COURS,
-            ModeConsommation = ModeConsommation,
-            EstPaye = true
-        };
+    var commande = new Commande
+    {
+        ClientId = clientId.Value,
+        DateCommande = DateTime.UtcNow,
+        Statut = StatutCommande.EN_COURS,
+        ModeConsommation = ModeConsommation,
+        EstPaye = true
+    };
 
-        _context.Commandes.Add(commande);
-        _context.SaveChanges();
+    _context.Commandes.Add(commande);
+    _context.SaveChanges();
 
-        foreach (var item in panier.Items)
-        {
-            var ci = new CommandeItem
-            {
-                CommandeId = commande.Id,
-                Quantite = item.Quantite,
-                PrixTotal = (decimal)(item.Prix * item.Quantite),
-                BurgerId = item.Type == "BURGER" ? item.Id : null,
-                MenuId = item.Type == "MENU" ? item.Id : null
-            };
-
-            _context.CommandeItems.Add(ci);
-        }
-
-        _context.SaveChanges();
-
-        _context.Paiements.Add(new Paiement
+    foreach (var item in panier.Items)
+    {
+        _context.CommandeItems.Add(new CommandeItem
         {
             CommandeId = commande.Id,
-            Montant = (decimal)panier.Total,
-            ModePaiement = ModePaiement,
-            StatutPaiement = StatutPaiement.VALIDE,
-            DatePaiement = DateTime.UtcNow
+            Quantite = item.Quantite,
+            PrixTotal = (decimal)(item.Prix * item.Quantite),
+            BurgerId = item.Type == "BURGER" ? item.Id : null,
+            MenuId = item.Type == "MENU" ? item.Id : null
         });
-
-        _context.SaveChanges();
-
-        HttpContext.Session.Remove("PANIER");
-
-        return RedirectToAction("MesCommandes");
     }
+
+    _context.SaveChanges();
+
+    _context.Paiements.Add(new Paiement
+    {
+        CommandeId = commande.Id,
+        Montant = (decimal)panier.Total,
+        ModePaiement = ModePaiement,
+        StatutPaiement = StatutPaiement.VALIDE,
+        DatePaiement = DateTime.UtcNow
+    });
+
+    _context.SaveChanges();
+
+    HttpContext.Session.Remove("PANIER");
+    return RedirectToAction("MesCommandes");
+}
 
     public IActionResult MesCommandes(int page = 1)
     {
@@ -214,5 +209,4 @@ public class CommandeController : Controller
 
         return View(commandes);
     }
-
-}        
+}
