@@ -126,59 +126,60 @@ public class CommandeController : Controller
 
     [HttpPost]
     [HttpPost]
-public IActionResult Confirmer(ModeConsommation ModeConsommation, ModePaiement ModePaiement)
-{
-    var clientId = HttpContext.Session.GetInt32("ClientId");
-    if (clientId == null)
-    {
-        var returnUrl = HttpContext.Request.Path;
-        return RedirectToAction("Login", "Auth", new { returnUrl });
-    }
-
-    var panier = PanierHelper.GetPanier(HttpContext);
-    if (!panier.Items.Any())
-        return RedirectToAction("Panier");
-
-    var commande = new Commande
-    {
-        ClientId = clientId.Value,
-        DateCommande = DateTime.UtcNow,
-        Statut = StatutCommande.EN_COURS,
-        ModeConsommation = ModeConsommation,
-        EstPaye = true
-    };
-
-    _context.Commandes.Add(commande);
-    _context.SaveChanges();
-
-    foreach (var item in panier.Items)
-    {
-        _context.CommandeItems.Add(new CommandeItem
+    public IActionResult Confirmer(ModeConsommation ModeConsommation, ModePaiement ModePaiement, string? Adresse)
         {
-            CommandeId = commande.Id,
-            Quantite = item.Quantite,
-            PrixTotal = (decimal)(item.Prix * item.Quantite),
-            BurgerId = item.Type == "BURGER" ? item.Id : null,
-            MenuId = item.Type == "MENU" ? item.Id : null
-        });
+            var clientId = HttpContext.Session.GetInt32("ClientId");
+            if (clientId == null)
+            {
+                var returnUrl = HttpContext.Request.Path;
+                return RedirectToAction("Login", "Auth", new { returnUrl });
+            }
+
+            var panier = PanierHelper.GetPanier(HttpContext);
+            if (!panier.Items.Any())
+                return RedirectToAction("Panier");
+
+            var commande = new Commande
+            {
+                ClientId = clientId.Value,
+                DateCommande = DateTime.UtcNow,
+                Statut = StatutCommande.EN_COURS,
+                ModeConsommation = ModeConsommation,
+                Adresse = ModeConsommation == ModeConsommation.LIVRAISON ? Adresse : null,
+                EstPaye = true
+            };
+
+            _context.Commandes.Add(commande);
+            _context.SaveChanges();
+
+            foreach (var item in panier.Items)
+            {
+                _context.CommandeItems.Add(new CommandeItem
+                {
+                    CommandeId = commande.Id,
+                    Quantite = item.Quantite,
+                    PrixTotal = (decimal)(item.Prix * item.Quantite),
+                    BurgerId = item.Type == "BURGER" ? item.Id : null,
+                    MenuId = item.Type == "MENU" ? item.Id : null
+                });
+            }
+
+            _context.SaveChanges();
+
+            _context.Paiements.Add(new Paiement
+            {
+                CommandeId = commande.Id,
+                Montant = (decimal)panier.Total,
+                ModePaiement = ModePaiement,
+                StatutPaiement = StatutPaiement.VALIDE,
+                DatePaiement = DateTime.UtcNow
+            });
+
+            _context.SaveChanges();
+
+            HttpContext.Session.Remove("PANIER");
+            return RedirectToAction("MesCommandes");
     }
-
-    _context.SaveChanges();
-
-    _context.Paiements.Add(new Paiement
-    {
-        CommandeId = commande.Id,
-        Montant = (decimal)panier.Total,
-        ModePaiement = ModePaiement,
-        StatutPaiement = StatutPaiement.VALIDE,
-        DatePaiement = DateTime.UtcNow
-    });
-
-    _context.SaveChanges();
-
-    HttpContext.Session.Remove("PANIER");
-    return RedirectToAction("MesCommandes");
-}
 
     public IActionResult MesCommandes(int page = 1)
     {

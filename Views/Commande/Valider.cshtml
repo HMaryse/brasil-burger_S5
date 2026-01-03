@@ -27,7 +27,6 @@
             margin-bottom: 12px;
         }
 
-        
         .option-card {
             height: 210px;
             border:2px solid #ddd;
@@ -84,7 +83,6 @@
             border-radius:20px;
         }
 
-       
         .recap-card {
             background:white;
             border-radius:16px;
@@ -133,12 +131,32 @@
             badge.className = 'label-selected';
             badge.innerText = 'Sélectionné';
             el.appendChild(badge);
+
+            toggleAdresseLivraison();
+        }
+
+        // 🔹 AJOUT : gestion affichage adresse livraison
+        function toggleAdresseLivraison() {
+            const livraison = document.querySelector(
+                'input[name="ModeConsommation"][value="LIVRAISON"]'
+            );
+
+            const blocAdresse = document.getElementById("bloc-adresse-livraison");
+            const champAdresse = document.getElementById("AdresseLivraison");
+
+            if (livraison && livraison.checked) {
+                blocAdresse.style.display = "block";
+                champAdresse.required = true;
+            } else {
+                blocAdresse.style.display = "none";
+                champAdresse.required = false;
+                champAdresse.value = "";
+            }
         }
     </script>
 </head>
 
 <body>
-
 
 <div class="top-bar">
     <div class="fw-semibold">🍔 Brasil Burger</div>
@@ -157,16 +175,13 @@
 
         <div class="row mt-4">
 
-            
             <div class="col-md-8">
 
-                
                 <h5 class="section-title">Mode de consommation</h5>
                 <div class="row g-3">
 
                     <div class="col-md-4">
-                        <label class="option-card consommation"
-                               onclick="selectOption('consommation', this)">
+                        <label class="option-card consommation" onclick="selectOption('consommation', this)">
                             <input type="radio" name="ModeConsommation" value="SUR_PLACE" required>
                             <img src="https://media-cdn.tripadvisor.com/media/photo-s/03/d6/4b/f4/caravana-fast-food.jpg">
                             <strong>Sur place</strong>
@@ -175,8 +190,7 @@
                     </div>
 
                     <div class="col-md-4">
-                        <label class="option-card consommation"
-                               onclick="selectOption('consommation', this)">
+                        <label class="option-card consommation" onclick="selectOption('consommation', this)">
                             <input type="radio" name="ModeConsommation" value="A_EMPORTER">
                             <img src="https://t3.ftcdn.net/jpg/03/66/29/50/360_F_366295063_1IPaniWBt7AjMAYk2aeNJoU9e0rTWHrO.jpg">
                             <strong>À emporter</strong>
@@ -185,8 +199,7 @@
                     </div>
 
                     <div class="col-md-4">
-                        <label class="option-card consommation"
-                               onclick="selectOption('consommation', this)">
+                        <label class="option-card consommation" onclick="selectOption('consommation', this)">
                             <input type="radio" name="ModeConsommation" value="LIVRAISON">
                             <img src="https://cdn-icons-png.flaticon.com/512/1048/1048313.png">
                             <strong>Livraison</strong>
@@ -195,14 +208,23 @@
                     </div>
 
                 </div>
-
                 
+                <div id="bloc-adresse-livraison" class="mt-4" style="display:none;">
+                    <h5 class="section-title">Adresse de livraison</h5>
+                    <textarea
+                        id="AdresseLivraison"
+                        name="Adresse"
+                        class="form-control"
+                        rows="3"
+                        placeholder="Ex : Dakar, Liberté 6, villa n°12, près de la pharmacie">
+                    </textarea>
+                </div>
+
                 <h5 class="section-title mt-4">Mode de paiement</h5>
                 <div class="row g-3">
 
                     <div class="col-md-4">
-                        <label class="option-card paiement"
-                               onclick="selectOption('paiement', this)">
+                        <label class="option-card paiement" onclick="selectOption('paiement', this)">
                             <input type="radio" name="ModePaiement" value="WAVE" required>
                             <img src="https://s.rfi.fr/media/display/ed44f02a-c239-11ec-b0fc-005056bf8594/w:980/p:16x9/wave-senegal-mobile-money.png">
                             <strong>Wave</strong>
@@ -210,8 +232,7 @@
                     </div>
 
                     <div class="col-md-4">
-                        <label class="option-card paiement"
-                               onclick="selectOption('paiement', this)">
+                        <label class="option-card paiement" onclick="selectOption('paiement', this)">
                             <input type="radio" name="ModePaiement" value="ORANGE_MONEY">
                             <img src="https://journalnt.com/wp-content/uploads/2016/06/orange_money.jpg">
                             <strong>Orange Money</strong>
@@ -219,10 +240,9 @@
                     </div>
 
                     <div class="col-md-4">
-                        <label class="option-card paiement"
-                               onclick="selectOption('paiement', this)">
+                        <label class="option-card paiement" onclick="selectOption('paiement', this)">
                             <input type="radio" name="ModePaiement" value="ESPECES">
-                            <img src="https://menlog.fr/hs-fs/hubfs/paiement%20esp%C3%A8ces.jpg?width=2240&height=1260&name=paiement%20esp%C3%A8ces.jpg">
+                            <img src="https://menlog.fr/hs-fs/hubfs/paiement%20esp%C3%A8ces.jpg">
                             <strong>Espèces</strong>
                         </label>
                     </div>
@@ -230,10 +250,8 @@
                 </div>
             </div>
 
-            
             <div class="col-md-4">
                 <div class="recap-card">
-
                     <h6 class="fw-semibold mb-3">Récapitulatif</h6>
 
                     @foreach (var item in Model.Items)
@@ -267,3 +285,4 @@
 
 </body>
 </html>
+
